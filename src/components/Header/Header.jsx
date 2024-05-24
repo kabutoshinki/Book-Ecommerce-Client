@@ -28,7 +28,7 @@ export default function Header() {
                   <div className="header-left">
                     <h1>{title}</h1>
                     <p dangerouslySetInnerHTML={{ __html: info }}></p>
-                    <Link className="btn btn-border" to={btnLink}>
+                    <Link className="btn btn-border " to={btnLink}>
                       View Detail
                     </Link>
                   </div>

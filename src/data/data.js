@@ -221,7 +221,10 @@ export const galleryData = [
     image: popularbook8,
   },
 ];
-
+import {  ImFacebook, ImBehance } from 'react-icons/im';
+import {  FiInstagram } from 'react-icons/fi';
+import {  RiTwitterXLine } from 'react-icons/ri';
+import {  GrLinkedinOption } from 'react-icons/gr';
 export const FootersLinksData = {
   Aboutus: [
     { linkname: "vision ", link: "*" },
@@ -254,11 +257,11 @@ export const FootersLinksData = {
     { linkname: "Contact us", link: "*" },
   ],
 
-  //   socials: [
-  //     { icon: ImFacebook, link: "https://www.facebook.com" },
-  //     { icon: FiInstagram, link: "https://www.twitter.com" },
-  //     { icon: GrLinkedinOption, link: "https://www.instagram.com" },
-  //     { icon: RiTwitterXLine, link: "https://www.twitter.com" },
-  //     { icon: ImBehance, link: "https://www.twitter.com" },
-  //   ],
+  socials: [
+    { icon: ImFacebook, link: "https://www.facebook.com" },
+    { icon: FiInstagram, link: "https://www.twitter.com" },
+    { icon: GrLinkedinOption, link: "https://www.instagram.com" },
+    { icon: RiTwitterXLine, link: "https://www.twitter.com" },
+    { icon: ImBehance, link: "https://www.twitter.com" },
+  ],
 };
