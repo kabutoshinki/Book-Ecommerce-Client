@@ -1,42 +1,187 @@
-#root {
-  max-width: 1280px;
+@import url("https://fonts.googleapis.com/css2?family=Prata&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Prata&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  list-style: none;
+  font-weight: 400;
+}
+
+:root {
+  --color-primary: #7a6930; /* Consider renaming this to avoid duplication */
+  --color-black: #111111;
+  --color-black-ex: #222222; /* Make sure variable names are consistent */
+  --color-dark: #7a7a7a;
+  --color-dark-ex: #e5e3da;
+  --color-light: #efeee8;
+  --color-bg-1: #f3f2ec;
+  --color-secondary: #edebe4; /* Renamed the second --color-primary */
+  --font-family-prata: "Prata", serif;
+  --font-family-Jakarta: "Plus Jakarta Sans", sans-serif;
+
+  --transition: 0.4s ease;
+}
+
+html {
+  scroll-behavior: smooth;
+  color: var(--color-dark);
+  font-family: var(--font-family-Jakarta);
+}
+
+body {
+  background: var(--color-bg-1);
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--font-family-prata);
+  text-transform: capitalize;
+}
+h1 {
+  font-size: 73px;
+  /* line-height: 145px; */
+  color: var(--color-black-ex);
+}
+
+h2 {
+  font-size: 48px;
+  line-height: auto;
+  color: var(--color-black-ex);
+}
+
+h3 {
+  font-size: 28px;
+  line-height: auto;
+  color: var(--color-black);
+}
+
+.h3-ex {
+  font-size: 26px !important;
+}
+
+h4 {
+  font-size: 22px;
+  line-height: auto;
+  color: var(--color-black);
+}
+
+h5 {
+  font-size: 17px;
+  corlor: var(--color-dark);
+}
+h5 span {
+  font-size: 18px;
+  color: var(--color-primary);
+}
+
+p {
+  font-size: 16px;
+  line-height: 220%;
+  letter-spacing: 4%;
+}
+
+small {
+  font-size: 13px;
+  letter-spacing: 16%;
+  color: var(--color-dark);
+}
+
+.btn {
+  display: inline-block;
+  width: fit-content;
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 35px;
+  text-transform: uppercase;
+  transition: var(--transition);
+  position: relative;
+}
+
+.btn::after {
+  content: "";
+  width: 0;
+  height: 100%;
+  background: var(--color-black-ex);
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  transition: var(--transition);
+}
+
+.btn:hover::after {
+  width: 100%;
+}
+
+.btn:hover {
+  color: var(--color-bg-1);
+}
+
+.btn-border {
+  border: 1px solid var(--color-dark);
+}
+
+button {
+  background: transparent;
+  border: none;
+}
+
+img {
+  width: 100%;
+  object-fit: cover;
+}
+
+section {
+  padding: 180px 0 !important;
+}
+
+.container {
+  width: 90%;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  max-width: 1420px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 60px !important;
   }
-  to {
-    transform: rotate(360deg);
+  h2 {
+    font-size: 38px !important;
+  }
+  h3 {
+    font-size: 26px !important;
+  }
+  h5 span {
+    font-size: 16px !important;
+  }
+  section {
+    padding: 100px 0 !important;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media (max-width: 600) {
+  h1 {
+    font-size: 40px !important;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  h2 {
+    font-size: 34px !important;
+  }
+  h3 {
+    font-size: 24px !important;
+  }
+  h4 {
+    font-size: 20px !important;
+  }
+  section {
+    padding: 70px 0 !important;
+  }
 }
