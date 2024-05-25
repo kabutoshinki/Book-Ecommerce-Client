@@ -8,16 +8,8 @@ export const navLinks = [
     path: "/about",
   },
   {
-    name: "Pages",
-    path: "/pages",
-  },
-  {
     name: "Shope",
-    path: "/shope",
-  },
-  {
-    name: "Articles",
-    path: "/articles",
+    path: "/books",
   },
   {
     name: "Contact",
@@ -34,17 +26,17 @@ export const navRight = {
     {
       id: 1,
       icon: FiUser,
-      link: "*",
+      link: "/login",
     },
     {
       id: 2,
       icon: BsBag,
-      link: "*",
+      link: "/cart",
     },
     {
       id: 3,
       icon: VscSearch,
-      link: "*",
+      link: "#",
     },
   ],
 };
@@ -221,10 +213,10 @@ export const galleryData = [
     image: popularbook8,
   },
 ];
-import {  ImFacebook, ImBehance } from 'react-icons/im';
-import {  FiInstagram } from 'react-icons/fi';
-import {  RiTwitterXLine } from 'react-icons/ri';
-import {  GrLinkedinOption } from 'react-icons/gr';
+import { ImFacebook, ImBehance } from "react-icons/im";
+import { FiInstagram } from "react-icons/fi";
+import { RiTwitterXLine } from "react-icons/ri";
+import { GrLinkedinOption } from "react-icons/gr";
 export const FootersLinksData = {
   Aboutus: [
     { linkname: "vision ", link: "*" },
@@ -265,3 +257,26 @@ export const FootersLinksData = {
     { icon: ImBehance, link: "https://www.twitter.com" },
   ],
 };
+
+export const relatedBooks = [
+  {
+    title: "Terrible Madness",
+    description: "THRILLER, DRAMA, HORROR",
+    price: "45.4",
+    image:
+      "https://static.vecteezy.com/system/resources/thumbnails/009/384/332/small_2x/old-vintage-book-clipart-design-illustration-free-png.png",
+  },
+  {
+    title: "Battle Drive",
+    description: "THRILLER, DRAMA, HORROR",
+    price: "45.4",
+    image:
+      "https://media.istockphoto.com/id/173015527/photo/a-single-red-book-on-a-white-surface.jpg?s=612x612&w=0&k=20&c=AeKmdZvg2_bRY2Yct7odWhZXav8CgDtLMc_5_pjSItY=",
+  },
+  {
+    title: "Terrible Madness",
+    description: "THRILLER, DRAMA, HORROR",
+    price: "45.4",
+    image: "https://cdn.pixabay.com/photo/2015/11/19/21/10/glasses-1052010_640.jpg",
+  },
+];

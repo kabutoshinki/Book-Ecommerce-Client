@@ -40,7 +40,7 @@ export default function Nav() {
         <div className="nav-right">
           {navRight.managements.map((item, index) => {
             return (
-              <Link key={index} className="management-icons">
+              <Link key={index} to={item.link} className="management-icons">
                 <item.icon />
               </Link>
             );
