@@ -18,7 +18,7 @@ export const navLinks = [
 ];
 
 import { FiUser } from "react-icons/fi";
-import { VscSearch } from "react-icons/vsc";
+// import { VscSearch } from "react-icons/vsc";
 import { BsBag } from "react-icons/bs";
 
 export const navRight = {
@@ -33,11 +33,11 @@ export const navRight = {
       icon: BsBag,
       link: "/cart",
     },
-    {
-      id: 3,
-      icon: VscSearch,
-      link: "#",
-    },
+    // {
+    //   id: 3,
+    //   icon: VscSearch,
+    //   link: "#",
+    // },
   ],
 };
 

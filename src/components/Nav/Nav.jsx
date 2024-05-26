@@ -5,8 +5,12 @@ import Logo from "../../assets/book-logo-2.gif";
 import { VscMenu } from "react-icons/vsc";
 import { GrClose } from "react-icons/gr";
 import { useState } from "react";
+
+import SuggestBooks from "../SuggestBook/SuggestBooks";
+
 export default function Nav() {
   const [isNavLinksShowing, setIsNavLinksShowing] = useState(false);
+
   if (innerWidth < 1024) {
     window.addEventListener("scroll", () => {
       document.querySelector(".nav-links").classList.add("navLinksHide");
@@ -17,6 +21,7 @@ export default function Nav() {
     document.querySelector("nav").classList.toggle("navShadow", window.screenY > 0);
     setIsNavLinksShowing(false);
   });
+
   return (
     <nav>
       <div className="container nav-container">
@@ -24,6 +29,10 @@ export default function Nav() {
         <Link to={"/"} className="logo">
           <img src={Logo} alt />
         </Link>
+
+        {/* Search Suggests */}
+        <SuggestBooks />
+
         {/* ......................Nav Link............................ */}
         <ul className={`nav-links ${isNavLinksShowing ? "navLinksShow" : "navLinksHide"}`}>
           {navLinks.map(({ name, path }, index) => {
