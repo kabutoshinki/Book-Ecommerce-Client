@@ -1,3 +1,26 @@
+.header-left .rate-container {
+  display: flex;
+  align-items: center;
+}
+
+.header-left .rate-container h6 {
+  margin-left: 10px;
+}
+
+.price .rate-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.header-left .rate-container {
+  display: flex;
+  align-items: center;
+}
+
+.header-left .rate-container h6 {
+  margin-left: 10px;
+}
+
 header {
   width: 100%;
   overflow: hidden;
@@ -108,6 +131,12 @@ header {
   }
 }
 @media (max-width: 1020px) {
+  .price {
+    justify-content: center;
+  }
+  .rate-container {
+    justify-content: center;
+  }
   .header-container {
     width: 97% !important;
     padding: 100px 0;

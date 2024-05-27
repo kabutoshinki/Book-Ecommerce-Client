@@ -11,6 +11,9 @@
 }
 .featurebook {
   background: var(--color-light);
+  height: 300px; /* Set the desired height for the images */
+  object-fit: cover; /* Ensure the image covers the entire container */
+  width: 100%; /* Ensure the image takes up the entire width */
 }
 
 .featurebook-info > div {
