@@ -2,8 +2,15 @@ import { Checkbox, Collapse, Input, Slider } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 const { Panel } = Collapse;
 import PropTypes from "prop-types";
+import { useQuery } from "@tanstack/react-query";
+import { categoryApi } from "../../services/category-api";
+import { PuffLoader } from "react-spinners";
 export default function FilterPanel({ onFilterChange, filterData }) {
-  const categories = ["Adventure", "Racing", "Drama", "Science Fiction"];
+  const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => categoryApi.getCategories(),
+  });
+  // const categories = ["Adventure", "Racing", "Drama", "Science Fiction"];
   const authors = ["Author #1", "Author #2", "Author #3"];
   const ratings = [
     { label: "1 Star", range: [0, 1.9] },
@@ -32,11 +39,15 @@ export default function FilterPanel({ onFilterChange, filterData }) {
             value={filterData.selectedCategories}
             onChange={(values) => handleFilterChange({ ...filterData, selectedCategories: values })}
           >
-            {categories.map((category) => (
-              <Checkbox key={category} value={category}>
-                {category}
-              </Checkbox>
-            ))}
+            {categoriesLoading ? (
+              <PuffLoader size={100} color="blue" />
+            ) : (
+              categoriesData.map((category, index) => (
+                <Checkbox key={index} value={category.id}>
+                  {category.name}
+                </Checkbox>
+              ))
+            )}
           </Checkbox.Group>
         </Panel>
         <Panel header="Author" key="2">

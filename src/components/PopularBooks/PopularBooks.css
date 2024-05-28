@@ -42,7 +42,13 @@
   text-align: center;
   animation: GAni forwards 400ms ease;
 }
-
+.no-books-found-container {
+  grid-column: span 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 24rem;
+}
 @keyframes GAni {
   from {
     transform: scale(0);

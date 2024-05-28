@@ -1,5 +1,5 @@
 import Header from "../components/Header/Header";
-import FeaturesBooks from "../components/FeaturesBooks/FeaturesBooks";
+import OnSalesBooks from "../components/OnSalesBooks/OnSalesBooks";
 import BestSellingBooks from "../components/BestSellingBooks/BestSellingBooks";
 import PopularBooks from "../components/PopularBooks/PopularBooks";
 
@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div>
       <Header />
-      <FeaturesBooks />
+      <OnSalesBooks />
       <BestSellingBooks />
       <PopularBooks />
     </div>

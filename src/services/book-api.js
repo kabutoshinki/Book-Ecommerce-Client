@@ -25,9 +25,17 @@ export const bookApi = {
         throw error;
       });
   },
-  getPopularBooks: (limit = 5) => {
+  getPopularBooks: (limit = 5, categoryName) => {
     return axiosClient
-      .get(`/books/popular?limit=${limit}`)
+      .get(`/books/popular?limit=${limit}&categoryName=${categoryName}`)
+      .then((response) => response.data)
+      .catch((error) => {
+        throw error;
+      });
+  },
+  searchBooks: (limit = 5, name) => {
+    return axiosClient
+      .get(`/books/search?limit=${limit}&name=${name}`)
       .then((response) => response.data)
       .catch((error) => {
         throw error;

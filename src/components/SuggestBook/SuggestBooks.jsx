@@ -1,81 +1,59 @@
 import { useState } from "react";
-import { AutoComplete, Input } from "antd";
+import { AutoComplete, Input, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
-
-const suggestBooks = [
-  {
-    id: 0,
-    title: "Terrible Madness",
-    categories: ["Sports", "Game"],
-    rating: 4.8,
-    price: 24.99,
-    discount: 10,
-    image:
-      "https://hips.hearstapps.com/hmg-prod/images/pile-of-books-with-pages-open-by-wind-royalty-free-image-1600785994.jpg?crop=0.79555xw:1xh;center,top&resize=2048:*",
-  },
-  {
-    id: 1,
-    title: "Such Fun Age",
-    categories: ["Adventure"],
-    rating: 4.7,
-    price: 22.99,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8q_yk7kO4xC_cHxahxXdnyecdMfBgqA1G9Sqa6jF4iA&s",
-  },
-  {
-    id: 2,
-    title: "Pushing Clouds",
-    categories: ["Adventure"],
-    rating: 4.6,
-    price: 27.99,
-    discount: 15,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8q_yk7kO4xC_cHxahxXdnyecdMfBgqA1G9Sqa6jF4iA&s",
-  },
-  {
-    id: 3,
-    title: "Homie",
-    categories: ["Horror", "Drama"],
-    rating: 4.3,
-    price: 18.99,
-    discount: 10,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8q_yk7kO4xC_cHxahxXdnyecdMfBgqA1G9Sqa6jF4iA&s",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { bookApi } from "../../services/book-api";
+import useDebounce from "../../utils/useDebound";
 
 const SuggestBooks = () => {
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
-
+  const debouncedSearch = useDebounce(searchValue, 300);
+  const { data, isLoading } = useQuery({
+    queryKey: ["searchBook", debouncedSearch],
+    queryFn: () => bookApi.searchBooks(10, searchValue),
+  });
+  console.log(data);
   const handleSelect = (value) => {
-    const bookId = suggestBooks.find((book) => book.title === value)?.id;
-    if (bookId) {
+    const book = data.find((book) => book.title === value);
+    if (book) {
       setSearchValue("");
-      navigate(`/book/${bookId}`);
+      navigate(`/book/${book.id}`);
     }
   };
 
   const handleSearchChange = (value) => {
     setSearchValue(value);
   };
-  const filteredBooks = suggestBooks.filter((book) => book.title.toLowerCase().includes(searchValue.toLowerCase()));
+
+  const options = isLoading
+    ? [{ value: "", label: <Spin key="loading" /> }] // Show Spin component while loading
+    : data
+    ? data.map((book) => ({
+        value: book.title,
+        label: (
+          <div
+            key={book.id}
+            className="flex items-center relative w-full overflow-hidden rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 p-2"
+          >
+            <img alt="related book cover" src={book.image} className="w-16 h-16 object-contain rounded-lg" />
+            <div className="ml-4">
+              <h6 className="text-base md:text-lg font-semibold">{book.title}</h6>
+              <div className="text-sm text-red-600">${book.price}</div>
+            </div>
+          </div>
+        ),
+      }))
+    : [];
+
   return (
     <div className="search-suggest">
       <AutoComplete
-        options={filteredBooks.map((book) => ({
-          value: book.title,
-          label: (
-            <div className="flex items-center relative w-full overflow-hidden rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 p-2">
-              <img alt="related book cover" src={book.image} className="w-16 h-16 object-contain rounded-lg" />
-              <div className="ml-4">
-                <h6 className="text-base md:text-lg font-semibold">{book.title}</h6>
-                <div className="text-sm text-red-600">${book.price}</div>
-              </div>
-            </div>
-          ),
-        }))}
+        options={options}
         onSelect={handleSelect}
         onChange={handleSearchChange}
         value={searchValue}
-        style={{ width: "130%" }} // Set width of the search input
+        style={{ width: "130%" }}
       >
         <Input.Search placeholder="Search books..." size="large" />
       </AutoComplete>
