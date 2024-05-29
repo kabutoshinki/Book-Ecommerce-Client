@@ -13,7 +13,7 @@ const SuggestBooks = () => {
     queryKey: ["searchBook", debouncedSearch],
     queryFn: () => bookApi.searchBooks(10, searchValue),
   });
-  console.log(data);
+
   const handleSelect = (value) => {
     const book = data.find((book) => book.title === value);
     if (book) {

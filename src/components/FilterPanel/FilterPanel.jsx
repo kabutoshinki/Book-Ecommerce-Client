@@ -1,43 +1,51 @@
-import { Checkbox, Collapse, Input, Slider } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Button, Checkbox, Collapse, Input, Slider } from "antd";
+import { SearchOutlined, StarOutlined } from "@ant-design/icons";
 const { Panel } = Collapse;
 import PropTypes from "prop-types";
 import { useQuery } from "@tanstack/react-query";
 import { categoryApi } from "../../services/category-api";
+import { authorApi } from "../../services/author-api";
 import { PuffLoader } from "react-spinners";
+import { useState } from "react";
 export default function FilterPanel({ onFilterChange, filterData }) {
+  const [localFilterData, setLocalFilterData] = useState(filterData);
   const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
     queryKey: ["categories"],
     queryFn: () => categoryApi.getCategories(),
   });
-  // const categories = ["Adventure", "Racing", "Drama", "Science Fiction"];
-  const authors = ["Author #1", "Author #2", "Author #3"];
-  const ratings = [
-    { label: "1 Star", range: [0, 1.9] },
-    { label: "2 Stars", range: [2, 2.9] },
-    { label: "3 Stars", range: [3, 3.9] },
-    { label: "4 Stars", range: [4, 4.9] },
-    { label: "5 Stars", range: [5, 5.9] },
-  ];
-  const handleFilterChange = (newFilterData) => {
-    onFilterChange(newFilterData);
+  const { data: authorsData, isLoading: authorsLoading } = useQuery({
+    queryKey: ["authors"],
+    queryFn: () => authorApi.getAuthors(),
+  });
+
+  const handleFilterChange = () => {
+    onFilterChange(localFilterData);
+  };
+
+  const handleReset = () => {
+    setLocalFilterData({
+      searchQuery: "",
+      selectedCategories: [],
+      selectedAuthors: [],
+      selectedRatings: [0, 5],
+      priceRange: [0, 1000],
+    });
   };
   return (
     <div className="p-4 sticky top-24">
-      {" "}
-      {/* Adjust top-24 based on your header's height */}
       <Input
         placeholder="Search books"
         prefix={<SearchOutlined />}
         className="mb-4"
-        onChange={(e) => handleFilterChange({ ...filterData, searchQuery: e.target.value })}
+        value={localFilterData.searchQuery}
+        onChange={(e) => setLocalFilterData({ ...localFilterData, searchQuery: e.target.value })}
       />
       <Collapse defaultActiveKey={["1", "2", "3", "4"]} className="bg-white">
         <Panel header="Category" key="1">
           <Checkbox.Group
             className="flex flex-col space-y-2"
-            value={filterData.selectedCategories}
-            onChange={(values) => handleFilterChange({ ...filterData, selectedCategories: values })}
+            value={localFilterData.selectedCategories}
+            onChange={(values) => setLocalFilterData({ ...localFilterData, selectedCategories: values })}
           >
             {categoriesLoading ? (
               <PuffLoader size={100} color="blue" />
@@ -53,42 +61,60 @@ export default function FilterPanel({ onFilterChange, filterData }) {
         <Panel header="Author" key="2">
           <Checkbox.Group
             className="flex flex-col space-y-2"
-            value={filterData.selectedAuthors}
-            onChange={(values) => handleFilterChange({ ...filterData, selectedAuthors: values })}
+            value={localFilterData.selectedAuthors}
+            onChange={(values) => setLocalFilterData({ ...localFilterData, selectedAuthors: values })}
           >
-            {authors.map((author) => (
-              <Checkbox key={author} value={author}>
-                {author}
-              </Checkbox>
-            ))}
+            {authorsLoading ? (
+              <PuffLoader size={100} color="blue" />
+            ) : (
+              authorsData.map((author, index) => (
+                <Checkbox key={index} value={author.id}>
+                  {author.name}
+                </Checkbox>
+              ))
+            )}
           </Checkbox.Group>
         </Panel>
         <Panel header="Rating Review" key="3">
-          <Checkbox.Group
-            className="flex flex-col space-y-2"
-            value={filterData.selectedRatings}
-            onChange={(values) => handleFilterChange({ ...filterData, selectedRatings: values })}
-          >
-            {ratings.map((rating) => (
-              <Checkbox key={rating.label} value={rating.label}>
-                {rating.label}
-              </Checkbox>
-            ))}
-          </Checkbox.Group>
+          <div className="flex justify-between mb-2">
+            <span>Rate Range:</span>
+            <span>
+              {`${localFilterData.selectedRatings[0]} `}
+              <StarOutlined /> - {`${localFilterData.selectedRatings[1]} `}
+              <StarOutlined />
+            </span>
+          </div>
+          <Slider
+            range
+            defaultValue={localFilterData.selectedRatings}
+            min={0}
+            max={5}
+            marks={{ 0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5" }}
+            step={1}
+            onChange={(value) => setLocalFilterData({ ...localFilterData, selectedRatings: value })}
+          />
         </Panel>
         <Panel header="Price Range" key="4">
           <div className="flex justify-between mb-2">
             <span>Price Range:</span>
-            <span>{`${filterData.priceRange[0]} - ${filterData.priceRange[1]}`}</span>
+            <span>{`${localFilterData.priceRange[0]} - ${localFilterData.priceRange[1]}`}</span>
           </div>
           <Slider
             range
-            defaultValue={filterData.priceRange}
+            defaultValue={localFilterData.priceRange}
             min={0}
-            max={100}
-            onChange={(value) => handleFilterChange({ ...filterData, priceRange: value })}
+            max={1000}
+            onChange={(value) => setLocalFilterData({ ...localFilterData, priceRange: value })}
           />
         </Panel>
+        <div className="mt-4 w-[90%] mx-auto my-10">
+          <Button icon={<SearchOutlined />} type="primary" className="mb-2" onClick={handleFilterChange} block>
+            Filter
+          </Button>
+          <Button onClick={handleReset} block>
+            Reset
+          </Button>
+        </div>
       </Collapse>
     </div>
   );

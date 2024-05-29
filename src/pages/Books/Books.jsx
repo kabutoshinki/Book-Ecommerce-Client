@@ -10,12 +10,13 @@ export default function Books() {
     searchQuery: "",
     selectedCategories: [],
     selectedAuthors: [],
-    selectedRatings: [],
-    priceRange: [0, 50], // Default price range
+    selectedRatings: [0, 5],
+    priceRange: [0, 1000], // Default price range
   });
   const handleFilterChange = (newFilterData) => {
     setFilterData(newFilterData);
   };
+  console.log(filterData);
   return (
     <Layout className="min-h-screen bg-white container">
       <Sider width={250} style={{ background: "white" }} className="bg-white border-r border-gray-200">
