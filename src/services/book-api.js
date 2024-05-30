@@ -41,6 +41,22 @@ export const bookApi = {
         throw error;
       });
   },
+  getBookDetail: (id) => {
+    return axiosClient
+      .get(`/books/${id}`)
+      .then((response) => response.data)
+      .catch((error) => {
+        throw error;
+      });
+  },
+  getBooksRelated: (id, limit) => {
+    return axiosClient
+      .get(`/books/${id}/related?limit=${limit}`)
+      .then((response) => response.data)
+      .catch((error) => {
+        throw error;
+      });
+  },
   getBooks: (
     page = 1,
     limit = 5,

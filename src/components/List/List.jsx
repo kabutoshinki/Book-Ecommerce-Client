@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { bookApi } from "../../services/book-api";
 import { Pagination } from "@nextui-org/react";
 import { extractPropertyValues } from "../../utils/extractData";
+import { handleAddToCart } from "../../utils/handleAddToCart";
 
 const { Option } = Select;
 const { Meta } = Card;
@@ -71,10 +72,6 @@ export default function List({ filterData }) {
 
   const handleDetailClick = (id) => {
     navigate(`/book/${id}`);
-  };
-
-  const handleAddToCart = (book) => {
-    console.log(`Added book to cart: ${book.title}`);
   };
 
   return (
@@ -146,7 +143,7 @@ export default function List({ filterData }) {
                         <div
                           className={`bg-white border border-gray-300 rounded-full p-2 transition-all duration-300 hover:scale-110`}
                         >
-                          <button onClick={() => handleAddToCart()} className="focus:outline-none">
+                          <button onClick={() => handleAddToCart(id, 1)} className="focus:outline-none">
                             <ShoppingCartOutlined
                               className={`text-black text-2xl cursor-pointer transition-opacity duration-300 ${
                                 hoveredIndex === index ? "opacity-100" : "opacity-0"
@@ -180,7 +177,7 @@ export default function List({ filterData }) {
               })
             : null}
         </div>
-        {data ? (
+        {data && data?.meta?.totalPages > 1 ? (
           <Pagination page={page} total={data?.meta?.totalPages} onChange={setPage} className="mt-4 text-center" />
         ) : null}
       </Content>

@@ -7,13 +7,21 @@ import useDebounce from "../../utils/useDebound";
 
 const SuggestBooks = () => {
   const [searchValue, setSearchValue] = useState("");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const navigate = useNavigate();
   const debouncedSearch = useDebounce(searchValue, 300);
   const { data, isLoading } = useQuery({
     queryKey: ["searchBook", debouncedSearch],
     queryFn: () => bookApi.searchBooks(10, searchValue),
+    enabled: isSearchFocused,
   });
+  const handleSearchFocus = () => {
+    setIsSearchFocused(true);
+  };
 
+  const handleSearchBlur = () => {
+    setIsSearchFocused(false);
+  };
   const handleSelect = (value) => {
     const book = data.find((book) => book.title === value);
     if (book) {
@@ -52,6 +60,8 @@ const SuggestBooks = () => {
         options={options}
         onSelect={handleSelect}
         onChange={handleSearchChange}
+        onFocus={handleSearchFocus}
+        onBlur={handleSearchBlur}
         value={searchValue}
         style={{ width: "130%" }}
       >

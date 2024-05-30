@@ -3,7 +3,7 @@ import { Button } from "antd";
 
 const OrderSummary = ({ totalCost, itemCount, cartItems }) => {
   const handleCheckout = () => {
-    const itemSummary = cartItems.map((item) => `ID: ${item.id}, Quantity: ${item.quantity}`).join("\n");
+    const itemSummary = cartItems.map((item) => `ID: ${item.bookId}, Quantity: ${item.quantity}`).join("\n");
     alert(`Total Amount: $${totalCost}\n\nItems:\n${itemSummary}`);
   };
   console.log(cartItems);

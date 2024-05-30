@@ -15,6 +15,7 @@ import { Button, Skeleton } from "antd";
 import BookNotFound from "../../assets/book-error-2.png";
 import { createSkeletonArray } from "../../utils/createSkeletonArray";
 import { extractPropertyValues } from "../../utils/extractData";
+import { handleAddToCart } from "../../utils/handleAddToCart";
 const breakpoints = {
   1024: {
     slidesPerView: 3,
@@ -102,6 +103,7 @@ export default function OnSalesBooks() {
                               icon={<ShoppingCartOutlined style={{ fontSize: "32px" }} />}
                               className="bg-white text-black opacity-75 hover:opacity-100 m-2"
                               size="large"
+                              onClick={() => handleAddToCart(id, 1)}
                             />
                           </div>
                         </div>

@@ -9,7 +9,7 @@ export default function TitleTypeOne({ ClassName, Title, TitleTop }) {
         <h2>{Title}</h2>
         <div className="line"></div>
       </div>
-      <img src={victor} alt="" className="victor" />
+      <img src={victor} alt="victor" className="victor" />
     </div>
   );
 }

@@ -12,6 +12,7 @@ import { Button, Rate, Skeleton } from "antd";
 import RenderCategories from "../Category/RenderCategories";
 import { extractPropertyValues } from "../../utils/extractData";
 import { ShoppingCartOutlined, EyeOutlined } from "@ant-design/icons";
+import { handleAddToCart } from "../../utils/handleAddToCart";
 export default function PopularBooks() {
   const [activeButton, setActiveButton] = useState("all");
   const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
@@ -116,6 +117,7 @@ export default function PopularBooks() {
                             shape="circle"
                             icon={<ShoppingCartOutlined style={{ fontSize: "32px" }} />}
                             className="bg-white text-black opacity-75 hover:opacity-100 m-2"
+                            onClick={() => handleAddToCart(id, 1)}
                             size="large"
                           />
                         </div>

@@ -22,7 +22,7 @@ export default function BestSellingBooks() {
   return (
     <section className="BestSellingBook">
       <div className="treeShape">
-        <img src={TreeShape} alt="" />
+        <img src={TreeShape} alt="tree" />
       </div>
 
       {isLoading ? (
@@ -69,7 +69,7 @@ export default function BestSellingBooks() {
                       <div className="selling-book-left">
                         <img
                           src={image}
-                          alt=""
+                          alt="image"
                           className="rounded-lg drop-shadow-xl hover:scale-105 transition-transform duration-300"
                         />
                       </div>

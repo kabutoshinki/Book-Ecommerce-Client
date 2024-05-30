@@ -27,7 +27,7 @@ export default function Nav() {
       <div className="container nav-container">
         {/* ......................Logo............................ */}
         <Link to={"/"} className="logo">
-          <img src={Logo} alt />
+          <img src={Logo} alt="logo" />
         </Link>
 
         {/* Search Suggests */}

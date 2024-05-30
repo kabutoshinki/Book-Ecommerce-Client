@@ -119,7 +119,7 @@ export default function Header() {
           </Swiper>
         )}
         <div className="header-shape">
-          <img src={headerShape} alt="" />
+          <img src={headerShape} alt="shape" />
         </div>
       </div>
     </header>

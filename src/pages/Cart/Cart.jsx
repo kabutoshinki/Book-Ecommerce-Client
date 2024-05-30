@@ -1,46 +1,66 @@
-import { useState } from "react";
 import CartItem from "../../components/CartItem/CartItem";
 import OrderSummary from "../../components/OrderSummary/OrderSummary";
-const generateCartItems = () => {
-  return Array.from({ length: 10 }, (_, index) => ({
-    id: index + 1,
-    image: "https://i.ibb.co/6gzWwSq/Rectangle-20-1.png",
-    title: `Luxe card holder ${index + 1}`,
-    price: (index + 1) * 50,
-    quantity: 1,
-  }));
-};
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getUserInfo } from "../../utils/getUserInfo";
+import { generateDeviceId } from "../../utils/generateDeviceId";
+import { cartApi } from "../../services/cart-api";
 
 export default function Cart() {
-  const [cartItems, setCartItems] = useState(generateCartItems());
+  const userInfo = getUserInfo();
+  const queryClient = useQueryClient();
+  const userId = userInfo ? userInfo.id : generateDeviceId();
+  const { data, isLoading } = useQuery({
+    queryKey: [`cart-${userId}`],
+    queryFn: () => cartApi.getCart(userId),
+    enabled: !!userId,
+  });
 
-  const handleQuantityChange = (id, value) => {
-    setCartItems((prevItems) => prevItems.map((item) => (item.id === id ? { ...item, quantity: value } : item)));
+  const increaseQuantityMutation = useMutation({
+    mutationFn: ({ userId, bookId, quantity }) => cartApi.increaseQuantity(userId, bookId, quantity),
+    onSuccess: () => queryClient.invalidateQueries([`cart-${userId}`]),
+  });
+
+  const decreaseQuantityMutation = useMutation({
+    mutationFn: ({ userId, bookId, quantity }) => cartApi.decreaseQuantity(userId, bookId, quantity),
+    onSuccess: () => queryClient.invalidateQueries([`cart-${userId}`]),
+  });
+
+  const deleteItemMutation = useMutation({
+    mutationFn: ({ userId, bookId }) => cartApi.deleteCartItem(userId, bookId),
+    onSuccess: () => queryClient.invalidateQueries([`cart-${userId}`]),
+  });
+
+  const handleQuantityChange = (bookId, value) => {
+    if (value > 0) {
+      increaseQuantityMutation.mutate({ userId, bookId, quantity: value });
+    } else {
+      decreaseQuantityMutation.mutate({ userId, bookId, quantity: -value });
+    }
   };
-
-  const handleRemoveItem = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  const handleRemoveItem = (bookId) => {
+    deleteItemMutation.mutate({ userId, bookId });
   };
-
-  const totalCost = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-
+  const totalCost = data?.reduce((total, item) => total + item?.book?.price * item?.quantity, 0);
+  if (isLoading) return <>Loading...</>;
   return (
     <div className="container mx-auto mt-10 p-2">
       <div className="sm:flex shadow-md my-10">
         <div className="w-full sm:w-3/4 bg-white px-10 py-10 rounded-lg">
           <div className="flex justify-between border-b pb-8">
             <h1 className="font-semibold text-2xl">Shopping Cart</h1>
-            <h2 className="font-semibold text-2xl">{cartItems.length} Items</h2>
+            <h2 className="font-semibold text-2xl">{data?.length} Items</h2>
           </div>
           <div className="h-96 overflow-y-scroll">
-            {cartItems.map((item) => (
-              <CartItem
-                key={item.id}
-                item={item}
-                handleQuantityChange={handleQuantityChange}
-                handleRemoveItem={handleRemoveItem}
-              />
-            ))}
+            {data
+              ? data.map((item) => (
+                  <CartItem
+                    key={item.id}
+                    item={item}
+                    handleQuantityChange={handleQuantityChange}
+                    handleRemoveItem={handleRemoveItem}
+                  />
+                ))
+              : null}
           </div>
           <a href="/books" className="flex font-semibold text-indigo-600 text-sm mt-10">
             <svg className="fill-current mr-2 text-indigo-600 w-4" viewBox="0 0 448 512">
@@ -49,7 +69,7 @@ export default function Cart() {
             Continue Shopping
           </a>
         </div>
-        <OrderSummary totalCost={totalCost} itemCount={cartItems.length} cartItems={cartItems} />
+        <OrderSummary totalCost={totalCost} itemCount={data.length} cartItems={data} />
       </div>
     </div>
   );
