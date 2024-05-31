@@ -10,9 +10,11 @@ import { GoArrowLeft } from "react-icons/go";
 import headerShape from "../../assets/header-shape.svg";
 import { useQuery } from "@tanstack/react-query";
 import { bookApi } from "../../services/book-api";
-import { Rate, Skeleton } from "antd";
+import { Skeleton } from "antd";
 import { createSkeletonArray } from "../../utils/createSkeletonArray";
+import { StarFilled, StarOutlined } from "@ant-design/icons";
 import BookNotFound from "../../assets/book-error-3.png";
+import Rating from "react-rating";
 export default function Header() {
   const { data, isLoading } = useQuery({
     queryKey: ["bestBooks"],
@@ -69,7 +71,15 @@ export default function Header() {
                       <div className="header-left mt-5">
                         <h1>{title}</h1>
                         <div className="flex items-center">
-                          <Rate value={average_rate} allowHalf disabled />
+                          <Rating
+                            start={0}
+                            stop={5}
+                            fractions={3}
+                            fullSymbol={<StarFilled className="text-yellow-500 text-2xl" />}
+                            emptySymbol={<StarOutlined className="text-2xl" />}
+                            initialRating={average_rate}
+                            readonly
+                          />
                           <h6 className="ms-2">{sold_quantity} Sold</h6>
                         </div>
                         <p dangerouslySetInnerHTML={{ __html: description }}></p>

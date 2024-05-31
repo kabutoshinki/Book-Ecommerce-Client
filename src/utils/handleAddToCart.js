@@ -1,20 +1,31 @@
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 import { cartApi } from "../services/cart-api";
 import { generateDeviceId } from "./generateDeviceId";
 import { getUserInfo } from "./getUserInfo";
 
-export const handleAddToCart = async (bookId, quantity) => {
-  try {
-    let userId;
-    if (getUserInfo()) {
-      const user = getUserInfo();
-      userId = user.id;
-    } else {
-      userId = generateDeviceId();
+const useAddToCart = () => {
+  const queryClient = useQueryClient();
+
+  const handleAddToCart = async (bookId, quantity = 1) => {
+    try {
+      let userId;
+      if (getUserInfo()) {
+        const user = getUserInfo();
+        userId = user.sub;
+      } else {
+        userId = generateDeviceId();
+      }
+      await cartApi.addToCart(userId, bookId, quantity);
+      toast.success("Item added 🛒🛒🛒");
+      queryClient.invalidateQueries({ queryKey: ["cartQuantity"] });
+    } catch (error) {
+      toast.error("Item add failed 😥😥😥");
+      console.error("Error adding item to cart:", error);
     }
-    await cartApi.addToCart(userId, bookId, quantity); // Assuming quantity is 1 for now
-    console.log("cart");
-  } catch (error) {
-    // Handle errors, such as displaying an error message to the user
-    console.error("Error adding item to cart:", error);
-  }
+  };
+
+  return { handleAddToCart };
 };
+
+export default useAddToCart;

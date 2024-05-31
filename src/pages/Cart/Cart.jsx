@@ -8,7 +8,7 @@ import { cartApi } from "../../services/cart-api";
 export default function Cart() {
   const userInfo = getUserInfo();
   const queryClient = useQueryClient();
-  const userId = userInfo ? userInfo.id : generateDeviceId();
+  const userId = userInfo ? userInfo.sub : generateDeviceId();
   const { data, isLoading } = useQuery({
     queryKey: [`cart-${userId}`],
     queryFn: () => cartApi.getCart(userId),

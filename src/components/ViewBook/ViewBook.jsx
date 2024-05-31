@@ -1,14 +1,16 @@
-import { Rate, Button, Tabs, Image, InputNumber } from "antd";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import { Button, Tabs, Image, InputNumber } from "antd";
+import { ShoppingCartOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 import TabPane from "antd/es/tabs/TabPane";
 import PropTypes from "prop-types";
 import RelatedBooks from "../RelatedBooks/RelatedBooks";
 import RenderCategories from "../Category/RenderCategories";
 import { extractPropertyValues } from "../../utils/extractData";
 import { useState } from "react";
-import { handleAddToCart } from "../../utils/handleAddToCart";
 import Review from "../Review/Review";
+import useAddToCart from "../../utils/handleAddToCart";
+import Rating from "react-rating";
 export default function ViewBook({ book }) {
+  const { handleAddToCart } = useAddToCart();
   const discountedPrice = book?.discount?.amount
     ? (book.price - book.price * (book.discount.amount / 100)).toFixed(2)
     : null;
@@ -58,9 +60,18 @@ export default function ViewBook({ book }) {
 
       {/* Content Section */}
       <div className="col-span-1 md:col-span-7 mx-5">
-        <h1 className="text-3xl font-bold">{book.title}</h1>
+        <h1 className="text-3xl font-bold mb-2">{book.title}</h1>
         <div className="flex items-center justify-center md:justify-start">
-          <Rate value={book.average_rate} allowHalf disabled />
+          <Rating
+            start={0}
+            stop={5}
+            fractions={3}
+            fullSymbol={<StarFilled className="text-yellow-500 text-2xl" />}
+            emptySymbol={<StarOutlined className="text-2xl" />}
+            initialRating={book.average_rate}
+            readonly
+          />
+
           <h6 className="mx-2">{book.sold_quantity} Sold </h6>
           {book.discount && (
             <div className="discount-ribbon bg-red-500 text-white px-2 py-1 text-xs font-bold hover:scale-105 transition-transform duration-300">
@@ -176,7 +187,7 @@ ViewBook.propTypes = {
     discount: PropTypes.shape({
       id: PropTypes.string.isRequired,
       amount: PropTypes.number.isRequired,
-    }).isRequired,
+    }),
     publisher: PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,

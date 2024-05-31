@@ -9,9 +9,9 @@ export const reviewApi = {
         throw error;
       });
   },
-  createReview: (userId, bookId, content, rate) => {
+  createReview: (userId, bookId, content, rating) => {
     return axiosClient
-      .post(`/reviews/`, { userId, bookId, content, rate })
+      .post(`/reviews/`, { userId, bookId, content, rating })
       .then((response) => response.data)
       .catch((error) => {
         throw error;

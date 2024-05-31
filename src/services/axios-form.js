@@ -1,12 +1,12 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-const axiosClient = axios.create({
+const axiosForm = axios.create({
   baseURL: "http://localhost:8080/",
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
   },
 });
-axiosClient.interceptors.request.use(
+axiosForm.interceptors.request.use(
   function (config) {
     const token = localStorage.getItem("accessToken");
     if (token) {
@@ -19,7 +19,7 @@ axiosClient.interceptors.request.use(
   }
 );
 
-axiosClient.interceptors.response.use(
+axiosForm.interceptors.response.use(
   function (response) {
     return response;
   },
@@ -31,7 +31,7 @@ axiosClient.interceptors.response.use(
         const refreshToken = localStorage.getItem("refreshToken");
         if (refreshToken) {
           // Send a request to your server to refresh the access token
-          const response = await axiosClient.post("/auth/refresh", { refreshToken });
+          const response = await axiosForm.post("/auth/refresh", { refreshToken });
           const newAccessToken = response.data.accessToken;
           const newRefreshToken = response.data.refreshToken;
           localStorage.setItem("accessToken", newAccessToken);
@@ -40,7 +40,7 @@ axiosClient.interceptors.response.use(
           // Retry the original request with the new access token
           error.config.headers.Authorization = `Bearer ${newAccessToken}`;
           console.log("refresh token success");
-          return axiosClient(error.config);
+          return axiosForm(error.config);
         } else {
           // Handle the case where there is no refresh token
           // For example, log the user out or redirect to login page
@@ -54,4 +54,4 @@ axiosClient.interceptors.response.use(
   }
 );
 
-export default axiosClient;
+export default axiosForm;

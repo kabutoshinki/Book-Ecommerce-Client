@@ -3,15 +3,17 @@ import TitleTypeTwo from "../../UI/TitleTypeTwo/TitleTypeTwo";
 import TreeShape from "../../assets/treeShape.png";
 // import { sellingBooksData } from "../../data/data";
 import { Link } from "react-router-dom";
+import { StarFilled, StarOutlined } from "@ant-design/icons";
 import { BsArrowRight } from "react-icons/bs";
 import { useQuery } from "@tanstack/react-query";
 import { bookApi } from "../../services/book-api";
-import { Rate, Skeleton } from "antd";
+import { Skeleton } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import { createSkeletonArray } from "../../utils/createSkeletonArray";
 import BookNotFound from "../../assets/book-error-3.png";
+import Rating from "react-rating";
 export default function BestSellingBooks() {
   const { data, isLoading } = useQuery({
     queryKey: ["BestSellingBooks"],
@@ -83,7 +85,15 @@ export default function BestSellingBooks() {
                         </small>
                         <h3>{title}</h3>
                         <div className="flex items-center justify-center md:justify-start">
-                          <Rate value={average_rate} allowHalf disabled />
+                          <Rating
+                            start={0}
+                            stop={5}
+                            fractions={3}
+                            fullSymbol={<StarFilled className="text-yellow-500 text-lg" />}
+                            emptySymbol={<StarOutlined className="text-lg" />}
+                            initialRating={average_rate}
+                            readonly
+                          />
                           <h6 className="mx-2">{sold_quantity} Sold </h6>
                           {discount && (
                             <div className="discount-ribbon bg-red-500 text-white px-2 py-1 text-xs font-bold hover:scale-105 transition-transform duration-300">

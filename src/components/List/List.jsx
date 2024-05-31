@@ -1,6 +1,6 @@
-import { Card, Layout, Select, Rate } from "antd";
+import { Card, Layout, Select } from "antd";
 const { Content } = Layout;
-import { ShoppingCartOutlined, EyeOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined, EyeOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RenderCategories from "../Category/RenderCategories";
@@ -9,7 +9,8 @@ import { useQuery } from "@tanstack/react-query";
 import { bookApi } from "../../services/book-api";
 import { Pagination } from "@nextui-org/react";
 import { extractPropertyValues } from "../../utils/extractData";
-import { handleAddToCart } from "../../utils/handleAddToCart";
+import useAddToCart from "../../utils/handleAddToCart";
+import Rating from "react-rating";
 
 const { Option } = Select;
 const { Meta } = Card;
@@ -19,7 +20,7 @@ export default function List({ filterData }) {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
   const [sortOrder, setSortOrder] = useState("popularity");
-
+  const { handleAddToCart } = useAddToCart();
   const { data, isLoading, isError, error } = useQuery({
     queryKey: [
       "books",
@@ -157,7 +158,15 @@ export default function List({ filterData }) {
                       title={title}
                       description={
                         <>
-                          <Rate value={average_rate} allowHalf disabled />
+                          <Rating
+                            start={0}
+                            stop={5}
+                            fractions={3}
+                            fullSymbol={<StarFilled className="text-yellow-500 text-lg" />}
+                            emptySymbol={<StarOutlined className="text-lg" />}
+                            initialRating={average_rate}
+                            readonly
+                          />
                           <div className="mt-2">
                             <RenderCategories categories={extractPropertyValues(categories, "name")} />
                           </div>

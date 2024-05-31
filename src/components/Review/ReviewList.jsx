@@ -1,28 +1,41 @@
-import { List, Avatar, Rate } from "antd";
+import { List, Avatar, Card } from "antd";
 import PropTypes from "prop-types";
-
+import { StarFilled, StarOutlined } from "@ant-design/icons";
+import Rating from "react-rating";
 const ReviewList = ({ reviews }) => {
   return (
-    <List
-      itemLayout="vertical"
-      dataSource={reviews}
-      renderItem={(review) => (
-        <List.Item
-          key={review.id} // Make sure each review has a unique identifier
-          extra={
-            <div>
-              <Rate disabled value={review.rating} />
-            </div>
-          }
-        >
-          <List.Item.Meta
-            avatar={<Avatar>{review.user?.avatar}</Avatar>}
-            title={<strong>{review.user.firstName + " " + review.user.lastName}</strong>}
-            description={review.content}
-          />
-        </List.Item>
-      )}
-    />
+    <Card>
+      <div style={{ maxHeight: "400px", overflowY: "scroll" }}>
+        <List
+          itemLayout="vertical"
+          dataSource={reviews}
+          renderItem={(review) => (
+            <List.Item
+              key={review.id}
+              extra={
+                <div>
+                  <Rating
+                    start={0}
+                    stop={5}
+                    fractions={3}
+                    fullSymbol={<StarFilled className="text-yellow-500 text-lg" />}
+                    emptySymbol={<StarOutlined className="text-lg" />}
+                    initialRating={review.rating}
+                    readonly
+                  />
+                </div>
+              }
+            >
+              <List.Item.Meta
+                avatar={<Avatar>{review.user?.avatar}</Avatar>}
+                title={<strong>{review.user.firstName + " " + review.user.lastName}</strong>}
+                description={review.content}
+              />
+            </List.Item>
+          )}
+        />
+      </div>
+    </Card>
   );
 };
 
@@ -30,7 +43,11 @@ ReviewList.propTypes = {
   reviews: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      author: PropTypes.string.isRequired,
+      user: PropTypes.shape({
+        firstName: PropTypes.string.isRequired,
+        lastName: PropTypes.string.isRequired,
+        avatar: PropTypes.string,
+      }),
       content: PropTypes.string.isRequired,
       rating: PropTypes.number.isRequired,
     })

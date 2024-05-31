@@ -8,6 +8,13 @@ export const cartApi = {
       .catch((error) => {
         throw error;
       }),
+  getCartQuantity: (userId) =>
+    axiosClient
+      .get(`/cart/${userId}/quantity`)
+      .then((response) => response.data)
+      .catch((error) => {
+        throw error;
+      }),
   addToCart: (userId, bookId, quantity) =>
     axiosClient
       .post("/cart/add", { userId, bookId, quantity })

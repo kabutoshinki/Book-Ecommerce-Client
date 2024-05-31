@@ -6,10 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 import RenderCategories from "../Category/RenderCategories";
 import { extractPropertyValues } from "../../utils/extractData";
 import { useState } from "react";
-import { handleAddToCart } from "../../utils/handleAddToCart";
+import useAddToCart from "../../utils/handleAddToCart";
 
 const RelatedBooks = () => {
   const { id } = useParams();
+  const { handleAddToCart } = useAddToCart();
   const { data, isLoading } = useQuery({
     queryKey: [`book_related-${id}`, id],
     queryFn: () => bookApi.getBooksRelated(id, 3),
@@ -20,7 +21,7 @@ const RelatedBooks = () => {
   if (isLoading) return <>isLoading</>;
   return (
     <div className="mt-8">
-      <h2 className="text-2xl font-bold">RELATED BOOKS</h2>
+      <h2 className="text-2xl font-bold mb-4">RELATED BOOKS</h2>
       <div className="grid grid-cols-1 gap-4">
         {data
           ? data.map((book, index) => (

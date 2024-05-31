@@ -4,13 +4,15 @@ import App from "./App.jsx";
 import "./App.css";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { NextUIProvider } from "@nextui-org/react";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <NextUIProvider>
         <App />
+        <ToastContainer />
       </NextUIProvider>
     </QueryClientProvider>
   </React.StrictMode>

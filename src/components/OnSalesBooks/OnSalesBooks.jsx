@@ -10,12 +10,13 @@ import { BsArrowReturnRight } from "react-icons/bs";
 import { useQuery } from "@tanstack/react-query";
 import { bookApi } from "../../services/book-api";
 import RenderCategories from "../Category/RenderCategories";
-import { ShoppingCartOutlined, EyeOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined, EyeOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 import { Button, Skeleton } from "antd";
 import BookNotFound from "../../assets/book-error-2.png";
 import { createSkeletonArray } from "../../utils/createSkeletonArray";
 import { extractPropertyValues } from "../../utils/extractData";
-import { handleAddToCart } from "../../utils/handleAddToCart";
+import useAddToCart from "../../utils/handleAddToCart";
+import Rating from "react-rating";
 const breakpoints = {
   1024: {
     slidesPerView: 3,
@@ -36,7 +37,7 @@ export default function OnSalesBooks() {
     queryKey: ["booksSale"],
     queryFn: () => bookApi.getBooksOnSale(),
   });
-
+  const { handleAddToCart } = useAddToCart();
   const skeletonArray = createSkeletonArray(9);
   return (
     <section className="Featured">
@@ -66,7 +67,7 @@ export default function OnSalesBooks() {
             autoplay={{ delay: 3000 }}
           >
             {data ? (
-              data.map(({ id, image, title, categories, price, discount }, index) => {
+              data.map(({ id, image, title, categories, average_rate, price, discount }, index) => {
                 const discountedPrice = discount ? (price - price * (discount.amount / 100)).toFixed(2) : null;
                 return (
                   <SwiperSlide key={index}>
@@ -74,9 +75,11 @@ export default function OnSalesBooks() {
                       <div className="relative overflow-hidden w-72 h-72 bg-white border rounded-md">
                         <div className="absolute right-0 top-0 h-16 w-16 z-10">
                           {" "}
-                          <div className="absolute transform rotate-45 bg-red-600 text-center text-white font-semibold py-1 right-[-35px] top-[32px] w-[170px]">
-                            {`${discount.amount}% Off`}
-                          </div>
+                          {discountedPrice && (
+                            <div className="absolute transform rotate-45 bg-red-600 text-center text-white font-semibold py-1 right-[-35px] top-[32px] w-[170px]">
+                              {`${discount.amount}% Off`}
+                            </div>
+                          )}
                         </div>
                         <div className="group relative">
                           <Link to={`/book/${id}`}>
@@ -112,6 +115,17 @@ export default function OnSalesBooks() {
                         <Link to={`/book/${id}`} className="text-lg font-semibold block mb-2">
                           {title}
                         </Link>
+                        <div className="">
+                          <Rating
+                            start={0}
+                            stop={5}
+                            fractions={3}
+                            fullSymbol={<StarFilled className="text-yellow-500 text-2xl" />}
+                            emptySymbol={<StarOutlined className="text-2xl" />}
+                            initialRating={average_rate}
+                            readonly
+                          />
+                        </div>
                         <RenderCategories categories={extractPropertyValues(categories, "name")} />
                         <div className="mt-2">
                           {discountedPrice ? (
@@ -119,8 +133,8 @@ export default function OnSalesBooks() {
                           ) : null}
                           <span
                             className={`  ${
-                              discountedPrice ? "line-through text-gray-500 text-sm" : "text-red-500 text-lg"
-                            } ml-3`}
+                              discountedPrice ? "line-through text-gray-500 text-sm ml-3" : "text-red-500 text-lg"
+                            }`}
                           >
                             $ {price}
                           </span>

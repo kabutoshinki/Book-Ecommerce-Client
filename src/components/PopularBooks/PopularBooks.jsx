@@ -8,13 +8,15 @@ import BookNotFound from "../../assets/book-error-2.png";
 import { Link } from "react-router-dom";
 import { BsArrowReturnRight } from "react-icons/bs";
 import { createSkeletonArray } from "../../utils/createSkeletonArray";
-import { Button, Rate, Skeleton } from "antd";
+import { Button, Skeleton } from "antd";
 import RenderCategories from "../Category/RenderCategories";
 import { extractPropertyValues } from "../../utils/extractData";
-import { ShoppingCartOutlined, EyeOutlined } from "@ant-design/icons";
-import { handleAddToCart } from "../../utils/handleAddToCart";
+import { ShoppingCartOutlined, EyeOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
+import useAddToCart from "../../utils/handleAddToCart";
+import Rating from "react-rating";
 export default function PopularBooks() {
   const [activeButton, setActiveButton] = useState("all");
+  const { handleAddToCart } = useAddToCart();
   const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
     queryKey: ["categories"],
     queryFn: () => categoryApi.getCategories(),
@@ -126,7 +128,15 @@ export default function PopularBooks() {
 
                     <div className="popularbook-info">
                       <h4>{title}</h4>
-                      <Rate value={average_rate} className="text-sm" allowHalf disabled />
+                      <Rating
+                        start={0}
+                        stop={5}
+                        fractions={3}
+                        fullSymbol={<StarFilled className="text-yellow-500 text-lg" />}
+                        emptySymbol={<StarOutlined className="text-lg" />}
+                        initialRating={average_rate}
+                        readonly
+                      />
                       <div>
                         <small>
                           {" "}
