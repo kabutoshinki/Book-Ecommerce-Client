@@ -1,9 +1,22 @@
 import { Form, Input, Modal } from "antd";
+import PropTypes from "prop-types";
 
-export default function CreateAddress(onOpen, onAdd, onCancel) {
-  const [form] = Form.useForm();
+const CreateAddress = ({ isVisible, onCancel, onAddAddress, form }) => {
+  const handleOk = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        onAddAddress(values);
+        form.resetFields();
+        onCancel();
+      })
+      .catch((info) => {
+        console.log("Validate Failed:", info);
+      });
+  };
+
   return (
-    <Modal title="Add Address" open={onOpen} onOk={onAdd} onCancel={onCancel}>
+    <Modal title="Add Address" open={isVisible} onOk={handleOk} onCancel={onCancel}>
       <Form form={form} layout="vertical">
         <Form.Item name="title" label="Title" rules={[{ required: true, message: "Please input the title!" }]}>
           <Input placeholder="Home" />
@@ -31,4 +44,13 @@ export default function CreateAddress(onOpen, onAdd, onCancel) {
       </Form>
     </Modal>
   );
-}
+};
+
+CreateAddress.propTypes = {
+  isVisible: PropTypes.bool.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  onAddAddress: PropTypes.func.isRequired,
+  form: PropTypes.object.isRequired,
+};
+
+export default CreateAddress;

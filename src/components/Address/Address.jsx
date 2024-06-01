@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"; // Import useQuery hook
 import { getUserInfo } from "../../utils/getUserInfo";
-import { Card } from "antd";
+import { Card, message } from "antd";
 import AddressForm from "./AddressForm";
 import AddressList from "./AddressList";
 import { addressApi } from "../../services/address-api";
@@ -32,33 +32,42 @@ export default function Address() {
         newAddress.city,
         newAddress.phone_number
       );
+      message.success("Address add successfully");
       // Refetch reviews after adding the new one
       refetch();
     } catch (error) {
       console.error("Error adding review:", error);
+      message.success("Address add failed");
     }
   };
   const handleUpdateAddress = async (updateAddress) => {
     try {
-      // Create a new review
-      await addressApi.updateUserAddress(
-        userInfo.sub,
-        updateAddress.id,
-        updateAddress.title,
-        updateAddress.address_line_1,
-        updateAddress.address_line_2,
-        updateAddress.city,
-        updateAddress.phone_number
-      );
-      // Refetch reviews after adding the new one
+      // Ensure that the updateAddress object contains the id property
+      const { id, title, address_line_1, address_line_2, city, phone_number } = updateAddress;
+
+      // Check if the id is available
+      console.log(updateAddress);
+      // Call the updateUserAddress function with the correct parameters
+      await addressApi.updateUserAddress(id, userInfo.sub, title, address_line_1, address_line_2, city, phone_number);
+
+      // Refetch addresses after updating
       refetch();
     } catch (error) {
-      console.error("Error adding review:", error);
+      console.error("Error updating address:", error);
+      message.error("Failed to update address");
     }
   };
   const handleDeleteAddress = async (addressId) => {
     try {
       await addressApi.deleteAddressUserItem(addressId);
+      refetch();
+    } catch (error) {
+      console.error("Error deleting address:", error);
+    }
+  };
+  const handleSelectAddress = async (addressId) => {
+    try {
+      await addressApi.selectedAddressUserItem(addressId, userInfo.sub);
       refetch();
     } catch (error) {
       console.error("Error deleting address:", error);
@@ -74,7 +83,12 @@ export default function Address() {
       <AddressForm onAddAddress={handleAddAddress} userInfo={userInfo} />
 
       {/* Review List */}
-      <AddressList onUpdate={handleUpdateAddress} addresses={addresses} onDelete={handleDeleteAddress} />
+      <AddressList
+        onUpdate={handleUpdateAddress}
+        addresses={addresses}
+        onDelete={handleDeleteAddress}
+        onSelect={handleSelectAddress}
+      />
     </Card>
   );
 }

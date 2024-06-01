@@ -29,4 +29,11 @@ export const addressApi = {
       .catch((error) => {
         throw error;
       }),
+  selectedAddressUserItem: (addressId, userId) =>
+    axiosClient
+      .post(`/addresses/${addressId}/${userId}/selected`)
+      .then((response) => response.data)
+      .catch((error) => {
+        throw error;
+      }),
 };

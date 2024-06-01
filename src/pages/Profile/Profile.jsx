@@ -7,8 +7,6 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { userApi } from "../../services/user-api";
 import Address from "../../components/Address/Address";
 
-const { TabPane } = Tabs;
-
 const Profile = () => {
   const userInfo = getUserInfo();
   const navigate = useNavigate();
@@ -62,7 +60,6 @@ const Profile = () => {
 
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
     }
-    // updateProfileMutation.mutate(updateUserDto);
     refetch();
   };
 
@@ -81,6 +78,41 @@ const Profile = () => {
   };
 
   if (isLoading) return <>Loading...</>;
+
+  const items = [
+    {
+      key: "1",
+      label: "User Information",
+      children: (
+        <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Form.Item label="First Name" name="firstName">
+              <Input prefix={<UserOutlined />} placeholder="First Name" />
+            </Form.Item>
+            <Form.Item label="Last Name" name="lastName">
+              <Input prefix={<UserOutlined />} placeholder="Last Name" />
+            </Form.Item>
+            <Form.Item label="Email" name="email">
+              <Input prefix={<MailOutlined />} placeholder="Email" disabled />
+            </Form.Item>
+          </div>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="mt-2"
+            style={{ backgroundColor: "#008001", borderColor: "#008001", borderRadius: "999px" }}
+          >
+            Update Profile
+          </Button>
+        </Form>
+      ),
+    },
+    {
+      key: "2",
+      label: "Address",
+      children: <Address />,
+    },
+  ];
 
   return (
     <div className="container mx-auto my-5 p-5 bg-white shadow-md rounded-lg">
@@ -108,34 +140,7 @@ const Profile = () => {
         </div>
         <div className="md:w-3/4 p-5">
           <h4 className="text-lg font-semibold mb-4">PERSONAL INFORMATION</h4>
-          <Tabs defaultActiveKey="1">
-            <TabPane tab="User Information" key="1">
-              <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Form.Item label="First Name" name="firstName">
-                    <Input prefix={<UserOutlined />} placeholder="First Name" />
-                  </Form.Item>
-                  <Form.Item label="Last Name" name="lastName">
-                    <Input prefix={<UserOutlined />} placeholder="Last Name" />
-                  </Form.Item>
-                  <Form.Item label="Email" name="email">
-                    <Input prefix={<MailOutlined />} placeholder="Email" disabled />
-                  </Form.Item>
-                </div>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className="mt-2"
-                  style={{ backgroundColor: "#008001", borderColor: "#008001", borderRadius: "999px" }}
-                >
-                  Update Profile
-                </Button>
-              </Form>
-            </TabPane>
-            <TabPane tab="Address" key="2">
-              <Address />
-            </TabPane>
-          </Tabs>
+          <Tabs defaultActiveKey="1" items={items} />
         </div>
       </div>
     </div>
