@@ -10,6 +10,9 @@ import Cart from "../pages/Cart/Cart";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import Profile from "../pages/Profile/Profile";
+import Success from "../pages/Status/Success";
+import Failed from "../pages/Status/Failed";
+import OrderHistory from "../pages/Order/OrderHistory";
 // Import your login component
 
 function AppRouter() {
@@ -28,8 +31,11 @@ function AppRouter() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/book/:id" element={<Book />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/login" element={<Login />} /> {/* Add the login route */}
-        <Route path="/register" element={<Register />} /> {/* Add the login route */}
+        <Route path="/order_history" element={<OrderHistory />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/failed" element={<Failed />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {!pathsWithoutNav.includes(location.pathname) && <Footer />}

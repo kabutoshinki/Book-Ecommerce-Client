@@ -8,7 +8,7 @@ export const navLinks = [
     path: "/about",
   },
   {
-    name: "Shope",
+    name: "Shop",
     path: "/books",
   },
   {
@@ -447,5 +447,25 @@ export const booksData = [
     price: 35.99,
     discount: 10,
     image: "https://www.nea.org/sites/default/files/styles/1920wide/public/2021-01/Free-Book.jpg?itok=A0UCklYk",
+  },
+];
+export const paymentMethods = [
+  {
+    id: "1",
+    image: "https://www.freeiconspng.com/uploads/cash-payment-icon-5.png",
+    name: "Traditional",
+    code: "default",
+  },
+  {
+    id: "2",
+    image: "https://vnpay333.com/wp-content/uploads/2021/03/vietinbank-300x150.png",
+    name: "Vn Pay",
+    code: "NCB",
+  },
+  {
+    id: "3",
+    image: "https://lgc.company/wp-content/uploads/2020/09/momo.png",
+    name: "Momo",
+    code: "MOMO",
   },
 ];

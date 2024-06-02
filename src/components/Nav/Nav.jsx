@@ -100,7 +100,7 @@ export default function Nav() {
                   <DropdownItem key="my-profile" onClick={() => navigate("/profile")}>
                     My Profile
                   </DropdownItem>
-                  <DropdownItem key="order-history" onClick={() => navigate("/order")}>
+                  <DropdownItem key="order-history" onClick={() => navigate("/order_history")}>
                     Order History
                   </DropdownItem>
                 </DropdownSection>

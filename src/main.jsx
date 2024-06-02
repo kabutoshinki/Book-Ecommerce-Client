@@ -12,7 +12,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={queryClient}>
       <NextUIProvider>
         <App />
-        <ToastContainer />
+        <ToastContainer
+        closeOnClick
+        />
       </NextUIProvider>
     </QueryClientProvider>
   </React.StrictMode>
