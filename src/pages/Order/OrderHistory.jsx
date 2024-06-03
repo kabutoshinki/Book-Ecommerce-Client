@@ -5,6 +5,7 @@ import { getUserInfo } from "../../utils/getUserInfo";
 import { useNavigate } from "react-router-dom";
 import { orderApi } from "../../services/order-api";
 import OrderItem from "../../Modal/Order/OrderItem";
+import RenderStatus from "../../components/Status/RenderStatus";
 
 const { Title, Text } = Typography;
 
@@ -85,6 +86,7 @@ export default function OrderHistory() {
         },
       ],
       onFilter: (value, record) => record.status.indexOf(value) === 0,
+      render: (status) => <RenderStatus status={status} />,
     },
     {
       title: "Order Date",

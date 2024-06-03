@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { Modal, Button, Table, Spin } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { orderApi } from "../../services/order-api";
+import RenderStatus from "../../components/Status/RenderStatus";
 
 const OrderItem = ({ selectedOrder, isModalVisible, handleOk, handleCancel }) => {
   const { data, isLoading } = useQuery({
@@ -49,7 +50,7 @@ const OrderItem = ({ selectedOrder, isModalVisible, handleOk, handleCancel }) =>
       onCancel={handleCancel}
       footer={[
         <Button key="ok" type="primary" onClick={handleOk}>
-          OK
+          Close
         </Button>,
       ]}
     >
@@ -59,7 +60,7 @@ const OrderItem = ({ selectedOrder, isModalVisible, handleOk, handleCancel }) =>
             <strong>Total:</strong> ${selectedOrder.total}
           </p>
           <p>
-            <strong>Status:</strong> {selectedOrder.status}
+            <strong>Status:</strong> <RenderStatus status={selectedOrder.status} />
           </p>
           <p>
             <strong>Date:</strong> {selectedOrder.created_at}
