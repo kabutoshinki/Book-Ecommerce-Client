@@ -19,15 +19,16 @@ import {
 import { BsBag } from "react-icons/bs";
 import { FiUser } from "react-icons/fi";
 import { authApi } from "../../services/auth-api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { cartApi } from "../../services/cart-api";
 import { generateDeviceId } from "../../utils/generateDeviceId";
 import { Badge } from "antd";
 export default function Nav() {
   const [isNavLinksShowing, setIsNavLinksShowing] = useState(false);
   const userInfo = getUserInfo();
-  const userId = userInfo ? userInfo.sub : generateDeviceId();
+  let userId = userInfo ? `user-${userInfo.sub}` : generateDeviceId();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data } = useQuery({
     queryKey: ["cartQuantity"],
     queryFn: () => cartApi.getCartQuantity(userId),
@@ -45,6 +46,8 @@ export default function Nav() {
   const handleLogout = () => {
     authApi.logout();
     navigate("/");
+    userId = generateDeviceId();
+    queryClient.invalidateQueries({ queryKey: ["cartQuantity"] });
   };
 
   return (

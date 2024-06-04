@@ -1,9 +1,9 @@
 import axiosClient from "./axios-client";
 
 export const orderApi = {
-  createOrder: (userId, createOrderDetailDto) =>
+  createOrder: (userId, createOrderDetailDto, checkout) =>
     axiosClient
-      .post(`/order-details/${userId}`, createOrderDetailDto)
+      .post(`/order-details/${userId}`, createOrderDetailDto, checkout)
       .then((response) => response.data)
       .catch((error) => {
         throw error;

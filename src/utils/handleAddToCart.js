@@ -12,7 +12,7 @@ const useAddToCart = () => {
       let userId;
       if (getUserInfo()) {
         const user = getUserInfo();
-        userId = user.sub;
+        userId = `user-${user.sub}`;
       } else {
         userId = generateDeviceId();
       }

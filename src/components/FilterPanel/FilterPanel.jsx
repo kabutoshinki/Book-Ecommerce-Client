@@ -43,7 +43,7 @@ export default function FilterPanel({ onFilterChange, filterData }) {
       <Collapse defaultActiveKey={["1", "2", "3", "4"]} className="bg-white">
         <Panel header="Category" key="1">
           <Checkbox.Group
-            className="flex flex-col space-y-2"
+            className="grid grid-cols-2 gap-2"
             value={localFilterData.selectedCategories}
             onChange={(values) => setLocalFilterData({ ...localFilterData, selectedCategories: values })}
           >
@@ -60,7 +60,7 @@ export default function FilterPanel({ onFilterChange, filterData }) {
         </Panel>
         <Panel header="Author" key="2">
           <Checkbox.Group
-            className="flex flex-col space-y-2"
+            className="grid grid-cols-2 gap-2"
             value={localFilterData.selectedAuthors}
             onChange={(values) => setLocalFilterData({ ...localFilterData, selectedAuthors: values })}
           >

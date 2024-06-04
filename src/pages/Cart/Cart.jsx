@@ -4,12 +4,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserInfo } from "../../utils/getUserInfo";
 import { generateDeviceId } from "../../utils/generateDeviceId";
 import { cartApi } from "../../services/cart-api";
-
+import { PuffLoader } from "react-spinners";
 export default function Cart() {
   const userInfo = getUserInfo();
   const queryClient = useQueryClient();
-  const userId = userInfo ? userInfo.sub : generateDeviceId();
-  const { data, isLoading } = useQuery({
+  const userId = userInfo ? `user-${userInfo.sub}` : generateDeviceId();
+  const { data, isLoading, error } = useQuery({
     queryKey: [`cart-${userId}`],
     queryFn: () => cartApi.getCart(userId),
     enabled: !!userId,
@@ -40,8 +40,23 @@ export default function Cart() {
   const handleRemoveItem = (bookId) => {
     deleteItemMutation.mutate({ userId, bookId });
   };
-  const totalCost = data?.reduce((total, item) => total + item?.book?.price * item?.quantity, 0);
-  if (isLoading) return <>Loading...</>;
+
+  const calculateDiscountedPrice = (book) => {
+    if (book.discount) {
+      return (book.price * (1 - book?.discount?.amount / 100)).toFixed(2);
+    }
+    return book.price;
+  };
+
+  const totalCost = data?.reduce((total, item) => total + calculateDiscountedPrice(item.book) * item.quantity, 0);
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <PuffLoader />
+      </div>
+    );
+  if (error) return <div>Error: {error.message}</div>;
   return (
     <div className="container mx-auto mt-10 p-2">
       <div className="sm:flex shadow-md my-10">
@@ -52,9 +67,9 @@ export default function Cart() {
           </div>
           <div className="h-96 overflow-y-scroll">
             {data
-              ? data.map((item) => (
+              ? data.map((item, index) => (
                   <CartItem
-                    key={item.id}
+                    key={index}
                     item={item}
                     handleQuantityChange={handleQuantityChange}
                     handleRemoveItem={handleRemoveItem}

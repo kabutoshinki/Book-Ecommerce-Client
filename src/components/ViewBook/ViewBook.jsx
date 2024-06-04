@@ -1,4 +1,4 @@
-import { Button, Tabs, Image, InputNumber } from "antd";
+import { Button, Tabs, Image, InputNumber, Popconfirm } from "antd";
 import { ShoppingCartOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 import TabPane from "antd/es/tabs/TabPane";
 import PropTypes from "prop-types";
@@ -9,12 +9,36 @@ import { useState } from "react";
 import Review from "../Review/Review";
 import useAddToCart from "../../utils/handleAddToCart";
 import Rating from "react-rating";
+import { getUserInfo } from "../../utils/getUserInfo";
+import { useNavigate } from "react-router-dom";
+import CheckoutModal from "../../Modal/Order/Checkout";
 export default function ViewBook({ book }) {
+  const [open, setOpen] = useState(false);
+  const [bookQuantity, setBookQuantity] = useState(1);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const userInfo = getUserInfo();
+  const navigate = useNavigate();
+
   const { handleAddToCart } = useAddToCart();
   const discountedPrice = book?.discount?.amount
     ? (book.price - book.price * (book.discount.amount / 100)).toFixed(2)
     : null;
-  const [bookQuantity, setBookQuantity] = useState(1);
+  const handleCheckout = () => {
+    if (!userInfo) {
+      setOpen(true);
+    } else {
+      setIsModalVisible(true);
+    }
+  };
+
+  const confirmLogin = () => {
+    setOpen(false);
+    navigate("/login");
+  };
+
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+  };
   return (
     <div className="container mx-auto grid grid-cols-1 md:grid-cols-10 gap-4 mt-8">
       <div className="col-span-1 w-full md:col-span-3  mx-2">
@@ -117,6 +141,18 @@ export default function ViewBook({ book }) {
         >
           Add To Cart
         </Button>
+        <Popconfirm
+          title="You need to login before checkout"
+          open={open}
+          onConfirm={confirmLogin}
+          onCancel={() => setOpen(false)}
+          okText="Login"
+          cancelText="Cancel"
+        >
+          <Button type="primary" className=" mx-2 " size="large" onClick={handleCheckout}>
+            Buy Now
+          </Button>
+        </Popconfirm>
       </div>
 
       {/* Details Product Section */}
@@ -171,6 +207,16 @@ export default function ViewBook({ book }) {
       <div className="col-span-1 md:col-span-3 order-1 md:order-2">
         <RelatedBooks />
       </div>
+      {userInfo && (
+        <CheckoutModal
+          isVisible={isModalVisible}
+          onCancel={handleModalCancel}
+          totalCost={discountedPrice ? discountedPrice * bookQuantity : book.price * bookQuantity}
+          cartItems={[{ bookId: book.id, book, quantity: bookQuantity }]}
+          userInfo={userInfo}
+          checkout="buynow"
+        />
+      )}
     </div>
   );
 }

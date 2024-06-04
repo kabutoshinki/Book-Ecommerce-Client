@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Table, Spin, Typography, Button } from "antd";
+import { Table, Typography, Button } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "../../utils/getUserInfo";
 import { useNavigate } from "react-router-dom";
 import { orderApi } from "../../services/order-api";
 import OrderItem from "../../Modal/Order/OrderItem";
 import RenderStatus from "../../components/Status/RenderStatus";
-
+import { BounceLoader } from "react-spinners";
 const { Title, Text } = Typography;
 
 export default function OrderHistory() {
@@ -46,7 +46,11 @@ export default function OrderHistory() {
   };
 
   if (isLoading) {
-    return <Spin size="large" />;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <BounceLoader />
+      </div>
+    );
   }
 
   if (error) {
@@ -115,7 +119,9 @@ export default function OrderHistory() {
 
   return (
     <div className="container mx-auto p-4">
-      <Title level={2}>Order History</Title>
+      <Title className="my-10" level={2}>
+        Order History
+      </Title>
       <Table
         columns={columns}
         dataSource={orders}

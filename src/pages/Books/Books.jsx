@@ -16,7 +16,7 @@ export default function Books() {
   const handleFilterChange = (newFilterData) => {
     setFilterData(newFilterData);
   };
-  console.log(filterData);
+
   return (
     <Layout className="min-h-screen bg-white container">
       <Sider width={250} style={{ background: "white" }} className="bg-white border-r border-gray-200">

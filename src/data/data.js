@@ -454,7 +454,7 @@ export const paymentMethods = [
     id: "1",
     image: "https://www.freeiconspng.com/uploads/cash-payment-icon-5.png",
     name: "Traditional",
-    code: "default",
+    code: "Default",
   },
   {
     id: "2",

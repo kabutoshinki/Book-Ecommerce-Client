@@ -11,6 +11,7 @@ import { Pagination } from "@nextui-org/react";
 import { extractPropertyValues } from "../../utils/extractData";
 import useAddToCart from "../../utils/handleAddToCart";
 import Rating from "react-rating";
+import { BounceLoader } from "react-spinners";
 
 const { Option } = Select;
 const { Meta } = Card;
@@ -21,7 +22,7 @@ export default function List({ filterData }) {
   const [limit, setLimit] = useState(12);
   const [sortOrder, setSortOrder] = useState("popularity");
   const { handleAddToCart } = useAddToCart();
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: [
       "books",
       page,
@@ -75,6 +76,7 @@ export default function List({ filterData }) {
     navigate(`/book/${id}`);
   };
 
+  if (error) return <div>Error: {error.message}</div>;
   return (
     <Layout>
       <Layout.Header className="bg-white px-4 py-2 border-b border-gray-200 flex justify-between items-center">
@@ -94,102 +96,108 @@ export default function List({ filterData }) {
           </Select>
         </div>
       </Layout.Header>
-      <Content className="p-4">
-        {data ? <p>Showing {data?.meta?.totalItems} books</p> : null}
-        <div className="grid grid-cols-4 gap-4">
-          {data
-            ? data?.items?.map(({ id, title, price, discount, average_rate, categories, image }, index) => {
-                const discountedPrice = discount ? (price * (1 - discount.amount / 100)).toFixed(2) : null;
-                const discountRibbon = discount ? (
-                  <div className="absolute top-0 left-0 bg-red-500 text-white font-semibold px-2 py-1 rounded-tr-md rounded-bl-md z-10">
-                    {discount.amount}% Off
-                  </div>
-                ) : null;
+      {!isLoading ? (
+        <Content className="p-4">
+          {data ? <p>Showing {data?.meta?.totalItems} books</p> : null}
+          <div className="grid grid-cols-4 gap-4">
+            {data
+              ? data?.items?.map(({ id, title, price, discount, average_rate, categories, image }, index) => {
+                  const discountedPrice = discount ? (price * (1 - discount.amount / 100)).toFixed(2) : null;
+                  const discountRibbon = discount ? (
+                    <div className="absolute top-0 left-0 bg-red-500 text-white font-semibold px-2 py-1 rounded-tr-md rounded-bl-md z-10">
+                      {discount.amount}% Off
+                    </div>
+                  ) : null;
 
-                // Handle description properly
+                  // Handle description properly
 
-                return (
-                  <Card
-                    key={index}
-                    hoverable
-                    className="w-full relative transition-transform transform hover:scale-105"
-                    onMouseEnter={() => handleMouseEnter(index)}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    <div className="relative">
-                      {discountRibbon}
-                      <img
-                        alt={title}
-                        src={image}
-                        className={`h-48 object-cover w-full rounded-md transition duration-300 ${
-                          hoveredIndex === index ? "filter blur-sm" : ""
-                        }`}
-                      />
-                      <div
-                        className={`absolute inset-0 flex items-center justify-center space-x-5 transition-opacity duration-300 ${
-                          hoveredIndex === index ? "opacity-100" : "opacity-0"
-                        }`}
-                      >
+                  return (
+                    <Card
+                      key={index}
+                      hoverable
+                      className="w-full relative transition-transform transform hover:scale-105"
+                      onMouseEnter={() => handleMouseEnter(index)}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      <div className="relative">
+                        {discountRibbon}
+                        <img
+                          alt={title}
+                          src={image}
+                          className={`h-48 object-cover w-full rounded-md transition duration-300 ${
+                            hoveredIndex === index ? "filter blur-sm" : ""
+                          }`}
+                        />
                         <div
-                          className={`bg-white border border-gray-300 rounded-full p-2 transition-all duration-300 hover:scale-110`}
+                          className={`absolute inset-0 flex items-center justify-center space-x-5 transition-opacity duration-300 ${
+                            hoveredIndex === index ? "opacity-100" : "opacity-0"
+                          }`}
                         >
-                          <button onClick={() => handleDetailClick(id)} className="focus:outline-none">
-                            <EyeOutlined
-                              className={`text-black text-2xl cursor-pointer transition-opacity duration-300 ${
-                                hoveredIndex === index ? "opacity-100" : "opacity-0"
-                              }`}
-                            />
-                          </button>
-                        </div>
-                        <div
-                          className={`bg-white border border-gray-300 rounded-full p-2 transition-all duration-300 hover:scale-110`}
-                        >
-                          <button onClick={() => handleAddToCart(id, 1)} className="focus:outline-none">
-                            <ShoppingCartOutlined
-                              className={`text-black text-2xl cursor-pointer transition-opacity duration-300 ${
-                                hoveredIndex === index ? "opacity-100" : "opacity-0"
-                              }`}
-                            />
-                          </button>
+                          <div
+                            className={`bg-white border border-gray-300 rounded-full p-2 transition-all duration-300 hover:scale-110`}
+                          >
+                            <button onClick={() => handleDetailClick(id)} className="focus:outline-none">
+                              <EyeOutlined
+                                className={`text-black text-2xl cursor-pointer transition-opacity duration-300 ${
+                                  hoveredIndex === index ? "opacity-100" : "opacity-0"
+                                }`}
+                              />
+                            </button>
+                          </div>
+                          <div
+                            className={`bg-white border border-gray-300 rounded-full p-2 transition-all duration-300 hover:scale-110`}
+                          >
+                            <button onClick={() => handleAddToCart(id, 1)} className="focus:outline-none">
+                              <ShoppingCartOutlined
+                                className={`text-black text-2xl cursor-pointer transition-opacity duration-300 ${
+                                  hoveredIndex === index ? "opacity-100" : "opacity-0"
+                                }`}
+                              />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <Meta
-                      title={title}
-                      description={
-                        <>
-                          <Rating
-                            start={0}
-                            stop={5}
-                            fractions={3}
-                            fullSymbol={<StarFilled className="text-yellow-500 text-lg" />}
-                            emptySymbol={<StarOutlined className="text-lg" />}
-                            initialRating={average_rate}
-                            readonly
-                          />
-                          <div className="mt-2">
-                            <RenderCategories categories={extractPropertyValues(categories, "name")} />
-                          </div>
-                          {discountedPrice ? (
+                      <Meta
+                        title={title}
+                        description={
+                          <>
+                            <Rating
+                              start={0}
+                              stop={5}
+                              fractions={3}
+                              fullSymbol={<StarFilled className="text-yellow-500 text-lg" />}
+                              emptySymbol={<StarOutlined className="text-lg" />}
+                              initialRating={average_rate}
+                              readonly
+                            />
                             <div className="mt-2">
-                              <span className="line-through text-gray-500">${price}</span>
-                              <span className="text-red-500 ml-2">${discountedPrice}</span>
+                              <RenderCategories categories={extractPropertyValues(categories, "name")} />
                             </div>
-                          ) : (
-                            <div className="mt-2">${price}</div>
-                          )}
-                        </>
-                      }
-                    />
-                  </Card>
-                );
-              })
-            : null}
+                            {discountedPrice ? (
+                              <div className="mt-2">
+                                <span className="line-through text-gray-500">${price}</span>
+                                <span className="text-red-500 ml-2">${discountedPrice}</span>
+                              </div>
+                            ) : (
+                              <div className="mt-2">${price}</div>
+                            )}
+                          </>
+                        }
+                      />
+                    </Card>
+                  );
+                })
+              : null}
+          </div>
+          {data && data?.meta?.totalPages > 1 ? (
+            <Pagination page={page} total={data?.meta?.totalPages} onChange={setPage} className="mt-4 text-center" />
+          ) : null}
+        </Content>
+      ) : (
+        <div className="flex justify-center items-center h-screen">
+          <BounceLoader />
         </div>
-        {data && data?.meta?.totalPages > 1 ? (
-          <Pagination page={page} total={data?.meta?.totalPages} onChange={setPage} className="mt-4 text-center" />
-        ) : null}
-      </Content>
+      )}
     </Layout>
   );
 }

@@ -8,38 +8,47 @@ import { orderApi } from "../../services/order-api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-const CheckoutModal = ({ isVisible, onCancel, totalCost, cartItems, userInfo }) => {
+const CheckoutModal = ({ isVisible, onCancel, totalCost, cartItems, userInfo, checkout }) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("Default");
+  const [isAddressEmpty, setIsAddressEmpty] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const handlePayment = async () => {
-    try {
-      const createOrderDetailDto = {
-        totalAmount: totalCost,
-        orderItems: cartItems.map((item) => ({
-          bookId: item.bookId,
-          quantity: item.quantity,
-        })),
-      };
+    if (isAddressEmpty) {
+      // Handle case where user has no addresses
+      toast.warning("Please add an address so we can deliver to you.");
+      return;
+    }
+    if (selectedPaymentMethod === "Default") {
+      try {
+        const createOrderDetailDto = {
+          totalAmount: totalCost,
+          orderItems: cartItems.map((item) => ({
+            bookId: item.bookId,
+            quantity: item.quantity,
+          })),
+        };
 
-      await orderApi.createOrder(userInfo.sub, createOrderDetailDto);
-      toast.success("Order Success");
-      // onCancel();
-      navigate("/success");
-      queryClient.invalidateQueries({ queryKey: ["cartQuantity"] });
-    } catch (error) {
-      toast.error("Order Failed");
-      navigate("/failed");
-      console.log(error);
+        await orderApi.createOrder(userInfo.sub, createOrderDetailDto, checkout);
+        toast.success("Order Success");
+
+        navigate("/success");
+        queryClient.invalidateQueries({ queryKey: ["cartQuantity"] });
+      } catch (error) {
+        toast.error("Order Failed");
+        navigate("/failed");
+        console.log(error);
+      }
+    } else if (selectedPaymentMethod === "MOMO" || selectedPaymentMethod === "NCB") {
+      toast.warning("This feature still in progress please use payment traditional");
     }
   };
-
   return (
     <Modal title="Checkout" open={isVisible} onCancel={onCancel} footer={null} width={1600}>
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={24} md={10} lg={11}>
           <h3>Address</h3>
-          <Address />
+          <Address checkEmpty={setIsAddressEmpty} />
         </Col>
         <Col xs={24} sm={24} md={14} lg={7}>
           <h3>Cart Items</h3>
@@ -94,6 +103,7 @@ const CheckoutModal = ({ isVisible, onCancel, totalCost, cartItems, userInfo }) 
 };
 
 CheckoutModal.propTypes = {
+  checkout: PropTypes.bool,
   isVisible: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
   totalCost: PropTypes.number.isRequired,

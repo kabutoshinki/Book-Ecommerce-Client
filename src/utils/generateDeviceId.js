@@ -4,7 +4,7 @@ export const generateDeviceId = () => {
   let deviceId = localStorage.getItem("deviceId");
   if (!deviceId) {
     // Generate a new device ID
-    deviceId = `guest:${uuidv4()}`;
+    deviceId = `guest-${uuidv4()}`;
     // Store the device ID in localStorage
     localStorage.setItem("deviceId", deviceId);
   }

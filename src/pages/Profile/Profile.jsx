@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { userApi } from "../../services/user-api";
 import Address from "../../components/Address/Address";
+import { PuffLoader } from "react-spinners";
 
 const Profile = () => {
   const userInfo = getUserInfo();
@@ -21,7 +22,7 @@ const Profile = () => {
     }
   }, [userInfo, navigate]);
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, refetch, error } = useQuery({
     queryKey: [`profile-${userInfo?.sub}`],
     queryFn: () => userApi.getProfile(userInfo.sub),
     enabled: !!userInfo,
@@ -77,7 +78,13 @@ const Profile = () => {
     }
   };
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <PuffLoader />
+      </div>
+    );
+  if (error) return <div>Error: {error.message}</div>;
 
   const items = [
     {

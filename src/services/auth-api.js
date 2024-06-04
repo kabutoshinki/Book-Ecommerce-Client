@@ -1,9 +1,9 @@
 import axiosClient from "./axios-client";
 
 export const authApi = {
-  login: (email, password) => {
+  login: (email, password, guest_cart) => {
     return axiosClient
-      .post(`/auth/login`, { email, password })
+      .post(`/auth/login`, { email, password, guest_cart })
       .then((response) => response.data)
       .catch((error) => {
         throw error;

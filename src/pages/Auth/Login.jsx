@@ -4,14 +4,15 @@ import { AiOutlineUser, AiOutlineLock } from "react-icons/ai";
 import { authApi } from "../../services/auth-api";
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import { generateDeviceId } from "../../utils/generateDeviceId";
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const guest_cart = generateDeviceId();
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      const { accessToken, refreshToken } = await authApi.login(values.email, values.password);
+      const { accessToken, refreshToken } = await authApi.login(values.email, values.password, guest_cart);
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);

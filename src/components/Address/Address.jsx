@@ -5,12 +5,17 @@ import AddressForm from "./AddressForm";
 import AddressList from "./AddressList";
 import { addressApi } from "../../services/address-api";
 import { useNavigate } from "react-router-dom";
-export default function Address() {
+import { useEffect } from "react";
+import PropTypes from "prop-types";
+import { PuffLoader } from "react-spinners";
+export default function Address({ checkEmpty }) {
   const userInfo = getUserInfo();
   const navigate = useNavigate();
-  if (!userInfo) {
-    navigate("/");
-  }
+  useEffect(() => {
+    if (!userInfo) {
+      navigate("/");
+    }
+  }, [userInfo, navigate]);
   const {
     data: addresses,
     isLoading,
@@ -20,7 +25,11 @@ export default function Address() {
     queryKey: [`user-address-${userInfo?.sub}`, userInfo?.sub],
     queryFn: () => addressApi.getAddressByUserId(userInfo?.sub),
   });
-
+  useEffect(() => {
+    if (checkEmpty && addresses) {
+      checkEmpty(addresses.length === 0);
+    }
+  }, [addresses, checkEmpty]);
   const handleAddAddress = async (newAddress) => {
     try {
       // Create a new review
@@ -73,7 +82,12 @@ export default function Address() {
       console.error("Error deleting address:", error);
     }
   };
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <PuffLoader />
+      </div>
+    );
   if (error) return <div>Error: {error.message}</div>;
 
   return (
@@ -92,3 +106,6 @@ export default function Address() {
     </Card>
   );
 }
+Address.propTypes = {
+  checkEmpty: PropTypes.bool,
+};
