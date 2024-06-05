@@ -15,7 +15,7 @@ const Profile = () => {
   const [form] = Form.useForm();
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
-
+  window.scrollTo(0, 0);
   useEffect(() => {
     if (!userInfo) {
       navigate("/");

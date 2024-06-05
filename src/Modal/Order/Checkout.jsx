@@ -53,7 +53,13 @@ const CheckoutModal = ({ isVisible, onCancel, totalCost, cartItems, userInfo, ch
         <Col xs={24} sm={24} md={14} lg={7}>
           <h3>Cart Items</h3>
           <div className="h-96 overflow-y-scroll">
-            {cartItems ? cartItems.map((item) => <CartView key={item.id} item={item} />) : null}
+            {cartItems
+              ? cartItems.map((item) => (
+                  <div key={item.id}>
+                    <CartView key={item.id} item={item} />
+                  </div>
+                ))
+              : null}
           </div>
           <Divider />
           <div>
@@ -109,14 +115,14 @@ CheckoutModal.propTypes = {
   totalCost: PropTypes.number.isRequired,
   cartItems: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      quantity: PropTypes.number.isRequired,
+      id: PropTypes.number,
+      quantity: PropTypes.number,
     })
   ).isRequired,
   userInfo: PropTypes.shape({
-    sub: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
+    sub: PropTypes.string,
+    name: PropTypes.string,
+    email: PropTypes.string,
   }).isRequired,
 };
 

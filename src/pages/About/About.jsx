@@ -7,7 +7,7 @@ export default function About() {
     queryKey: ["about page"],
     queryFn: () => aboutApi.getAbout(),
   });
-
+  window.scrollTo(0, 0);
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">

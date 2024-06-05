@@ -10,6 +10,7 @@ export default function Book() {
     queryKey: [`book-${id}`, id],
     queryFn: () => bookApi.getBookDetail(id),
   });
+  window.scrollTo(0, 0);
   if (isLoading)
     return (
       <div className="flex justify-center items-center h-screen">

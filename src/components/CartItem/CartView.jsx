@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const CartView = ({ item }) => {
   const calculateDiscountedPrice = (book) => {
     if (book?.discount) {
-      return (book?.price * (1 - book?.discount?.amount / 100)).toFixed(2);
+      return (book?.price * (1 - book?.discount?.amount / 100))?.toFixed(2);
     }
     return book?.price;
   };
@@ -55,12 +55,12 @@ CartView.propTypes = {
   item: PropTypes.shape({
     bookId: PropTypes.string.isRequired,
     book: PropTypes.shape({
-      image: PropTypes.string.isRequired,
-      title: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
+      image: PropTypes.string,
+      title: PropTypes.string,
+      price: PropTypes.number,
       discount: PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        isActive: PropTypes.bool.isRequired,
+        amount: PropTypes.number,
+        isActive: PropTypes.bool,
       }),
     }).isRequired,
     quantity: PropTypes.number.isRequired,

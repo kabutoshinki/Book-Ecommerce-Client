@@ -21,7 +21,7 @@ export default function ViewBook({ book }) {
 
   const { handleAddToCart } = useAddToCart();
   const discountedPrice = book?.discount?.amount
-    ? (book.price - book.price * (book.discount.amount / 100)).toFixed(2)
+    ? (book.price - book.price * (book.discount.amount / 100))?.toFixed(2)
     : null;
   const handleCheckout = () => {
     if (!userInfo) {

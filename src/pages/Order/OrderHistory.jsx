@@ -12,7 +12,7 @@ const { Title, Text } = Typography;
 export default function OrderHistory() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  window.scrollTo(0, 0);
   const navigate = useNavigate();
   const user = getUserInfo();
 

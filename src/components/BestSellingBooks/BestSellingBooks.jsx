@@ -64,7 +64,7 @@ export default function BestSellingBooks() {
           {data ? (
             data.map(
               ({ id, image, description, discount, title, average_rate, sold_quantity, price, authors }, index) => {
-                const discountedPrice = discount ? (price - price * (discount.amount / 100)).toFixed(2) : null;
+                const discountedPrice = discount ? (price - price * (discount.amount / 100))?.toFixed(2) : null;
                 return (
                   <SwiperSlide key={index}>
                     <div className="container bestselling-container">

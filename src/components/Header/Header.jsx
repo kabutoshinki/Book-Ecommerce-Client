@@ -70,7 +70,7 @@ export default function Header() {
                       )}
                       <div className="header-left mt-5">
                         <h1>{title}</h1>
-                        <div className="flex items-center">
+                        <div className="">
                           <Rating
                             start={0}
                             stop={5}

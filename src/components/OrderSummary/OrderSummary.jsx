@@ -77,10 +77,10 @@ OrderSummary.propTypes = {
   itemCount: PropTypes.number.isRequired,
   cartItems: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      quantity: PropTypes.number.isRequired,
+      id: PropTypes.number,
+      quantity: PropTypes.number,
     })
-  ).isRequired,
+  ),
 };
 
 export default OrderSummary;

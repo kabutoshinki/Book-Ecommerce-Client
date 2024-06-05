@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import CartItem from "../../components/CartItem/CartItem";
 import OrderSummary from "../../components/OrderSummary/OrderSummary";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -5,6 +6,7 @@ import { getUserInfo } from "../../utils/getUserInfo";
 import { generateDeviceId } from "../../utils/generateDeviceId";
 import { cartApi } from "../../services/cart-api";
 import { PuffLoader } from "react-spinners";
+
 export default function Cart() {
   const userInfo = getUserInfo();
   const queryClient = useQueryClient();
@@ -14,6 +16,15 @@ export default function Cart() {
     queryFn: () => cartApi.getCart(userId),
     enabled: !!userId,
   });
+
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      setSelectedItems(data.map((item) => item.book.id));
+      window.scrollTo(0, 0);
+    }
+  }, [data]);
 
   const increaseQuantityMutation = useMutation({
     mutationFn: ({ userId, bookId, quantity }) => cartApi.increaseQuantity(userId, bookId, quantity),
@@ -37,18 +48,29 @@ export default function Cart() {
       decreaseQuantityMutation.mutate({ userId, bookId, quantity: -value });
     }
   };
+
   const handleRemoveItem = (bookId) => {
     deleteItemMutation.mutate({ userId, bookId });
   };
 
+  const handleSelectChange = (bookId) => {
+    setSelectedItems((prevSelected) =>
+      prevSelected.includes(bookId) ? prevSelected.filter((id) => id !== bookId) : [...prevSelected, bookId]
+    );
+  };
+
   const calculateDiscountedPrice = (book) => {
     if (book.discount) {
-      return (book.price * (1 - book?.discount?.amount / 100)).toFixed(2);
+      return (book.price * (1 - book?.discount?.amount / 100))?.toFixed(2);
     }
     return book.price;
   };
 
-  const totalCost = data?.reduce((total, item) => total + calculateDiscountedPrice(item.book) * item.quantity, 0);
+  const totalCost = data?.reduce(
+    (total, item) =>
+      selectedItems.includes(item.book.id) ? total + calculateDiscountedPrice(item.book) * item.quantity : total,
+    0
+  );
 
   if (isLoading)
     return (
@@ -57,6 +79,7 @@ export default function Cart() {
       </div>
     );
   if (error) return <div>Error: {error.message}</div>;
+
   return (
     <div className="container mx-auto mt-10 p-2">
       <div className="sm:flex shadow-md my-10">
@@ -68,12 +91,15 @@ export default function Cart() {
           <div className="h-96 overflow-y-scroll">
             {data
               ? data.map((item, index) => (
-                  <CartItem
-                    key={index}
-                    item={item}
-                    handleQuantityChange={handleQuantityChange}
-                    handleRemoveItem={handleRemoveItem}
-                  />
+                  <div key={index}>
+                    <CartItem
+                      item={item}
+                      handleQuantityChange={handleQuantityChange}
+                      handleRemoveItem={handleRemoveItem}
+                      isSelected={selectedItems.includes(item.book.id)}
+                      handleSelectChange={handleSelectChange}
+                    />
+                  </div>
                 ))
               : null}
           </div>
@@ -84,7 +110,11 @@ export default function Cart() {
             Continue Shopping
           </a>
         </div>
-        <OrderSummary totalCost={totalCost} itemCount={data.length} cartItems={data} />
+        <OrderSummary
+          totalCost={parseFloat(totalCost?.toFixed(2))}
+          itemCount={selectedItems?.length}
+          cartItems={data?.filter((item) => selectedItems.includes(item?.book?.id))}
+        />
       </div>
     </div>
   );
