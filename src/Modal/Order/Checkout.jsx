@@ -27,9 +27,9 @@ const CheckoutModal = ({ isVisible, onCancel, totalCost, cartItems, userInfo, ch
             bookId: item.bookId,
             quantity: item.quantity,
           })),
+          checkout_method: checkout,
         };
-
-        await orderApi.createOrder(userInfo.sub, createOrderDetailDto, checkout);
+        await orderApi.createOrder(userInfo.sub, createOrderDetailDto);
         toast.success("Order Success");
 
         navigate("/success");

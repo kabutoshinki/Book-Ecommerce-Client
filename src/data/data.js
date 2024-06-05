@@ -11,10 +11,10 @@ export const navLinks = [
     name: "Shop",
     path: "/books",
   },
-  {
-    name: "Contact",
-    path: "/contact",
-  },
+  // {
+  //   name: "Contact",
+  //   path: "/contact",
+  // },
 ];
 
 import { FiUser } from "react-icons/fi";

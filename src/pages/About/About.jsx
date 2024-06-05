@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { aboutApi } from "../../services/about-api";
 import parse from "html-react-parser";
+import { BounceLoader } from "react-spinners";
 export default function About() {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["about page"],
@@ -8,7 +9,11 @@ export default function About() {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <BounceLoader />
+      </div>
+    );
   }
 
   if (isError) {

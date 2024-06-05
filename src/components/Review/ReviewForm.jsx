@@ -7,7 +7,6 @@ const AddReviewForm = ({ onAddReview, userInfo }) => {
   const [content, setContent] = useState("");
   const [rating, setRating] = useState(0);
   const handleSubmit = () => {
-    console.log("abc");
     if (!userInfo) {
       message.error("You need to login before leaving a review.");
       return;
@@ -16,7 +15,7 @@ const AddReviewForm = ({ onAddReview, userInfo }) => {
       message.error("Please provide both content and a rating.");
       return;
     }
-    console.log(rating);
+
     onAddReview({ content, rating });
     setContent("");
     setRating(0);
