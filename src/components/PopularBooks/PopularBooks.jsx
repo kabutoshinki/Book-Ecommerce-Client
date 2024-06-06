@@ -171,7 +171,7 @@ export default function PopularBooks() {
           </div>
         )}
         <div className="mt-12">
-          <Link to="/books" className="btn feature-btn   ">
+          <Link to="/books" className=" btn-popular feature-btn">
             View all books <BsArrowReturnRight />
           </Link>
         </div>

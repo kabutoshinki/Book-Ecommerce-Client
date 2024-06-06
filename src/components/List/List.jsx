@@ -53,6 +53,7 @@ export default function List({ filterData }) {
 
   useEffect(() => {
     setPage(1);
+    window.scrollTo(0, 0);
   }, [searchQuery, selectedCategories, selectedAuthors, selectedRatings, priceRange]);
 
   const handleLimitChange = (value) => {
@@ -190,7 +191,15 @@ export default function List({ filterData }) {
               : null}
           </div>
           {data && data?.meta?.totalPages > 1 ? (
-            <Pagination page={page} total={data?.meta?.totalPages} onChange={setPage} className="mt-4 text-center" />
+            <Pagination
+              page={page}
+              total={data?.meta?.totalPages}
+              onChange={(newPage) => {
+                setPage(newPage);
+                window.scrollTo(0, 0);
+              }}
+              className="mt-4 text-center"
+            />
           ) : null}
         </Content>
       ) : (

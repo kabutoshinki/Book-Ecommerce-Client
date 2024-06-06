@@ -1,37 +1,35 @@
 import axiosClient from "./axios-client";
 
 export const bookApi = {
-  getBooksOnSale: (limit = 5) =>
-    axiosClient
-      .get(`/books/on-sale?limit=${limit}`)
+  getBooksOptions: ({ type, limit = 5, categoryName, sortBy }) => {
+    const params = { type, limit };
+    if (categoryName) params.categoryName = categoryName;
+    if (sortBy) params.sortBy = sortBy.join(",");
+
+    return axiosClient
+      .get("/books/options", { params })
       .then((response) => response.data)
       .catch((error) => {
         throw error;
-      }),
+      });
+  },
+  getBooksOnSale: (limit = 5) => {
+    return bookApi.getBooksOptions({ type: "onSale", limit, sortBy: ["book.sold_quantity"] });
+  },
 
   getBestBooks: (limit = 5) => {
-    return axiosClient
-      .get(`/books/best-books?limit=${limit}`)
-      .then((response) => response.data)
-      .catch((error) => {
-        throw error;
-      });
+    return bookApi.getBooksOptions({ type: "best", limit });
   },
   getBestSellingBooks: (limit = 5) => {
-    return axiosClient
-      .get(`/books/best-sales?limit=${limit}`)
-      .then((response) => response.data)
-      .catch((error) => {
-        throw error;
-      });
+    return bookApi.getBooksOptions({ type: "bestSelling", limit, sortBy: ["book.average_rate"] });
   },
-  getPopularBooks: (limit = 5, categoryName) => {
-    return axiosClient
-      .get(`/books/popular?limit=${limit}&categoryName=${categoryName}`)
-      .then((response) => response.data)
-      .catch((error) => {
-        throw error;
-      });
+  getPopularBooks: (limit = 8, categoryName) => {
+    return bookApi.getBooksOptions({
+      type: "popular",
+      limit,
+      categoryName: categoryName,
+      sortBy: ["book.average_rate"],
+    });
   },
   searchBooks: (limit = 5, name) => {
     return axiosClient

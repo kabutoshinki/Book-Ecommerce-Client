@@ -88,3 +88,40 @@
     margin-bottom: 10px;
   }
 }
+
+.feature-btn {
+  margin: auto;
+  margin-right: 0;
+  margin-top: -40px;
+}
+
+.btn-popular {
+  display: inline-block;
+  width: fit-content;
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 35px;
+  text-transform: uppercase;
+  transition: var(--transition);
+  position: relative;
+}
+
+.btn-popular::after {
+  content: "";
+  width: 0;
+  height: 100%;
+
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.btn-popular:hover::after {
+  width: 100%;
+}
+
+.btn-popular-border {
+  border: 1px solid var(--color-dark);
+}
