@@ -25,8 +25,8 @@ export default function OrderHistory() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: [`OrderHistory-${user.sub}`],
-    queryFn: () => orderApi.getOrderHistory(user.sub),
+    queryKey: [`OrderHistory-${user?.sub}`],
+    queryFn: () => orderApi.getOrderHistory(user?.sub),
     enabled: !!user,
   });
 

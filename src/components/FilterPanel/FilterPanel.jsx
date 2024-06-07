@@ -51,7 +51,7 @@ export default function FilterPanel({ onFilterChange, filterData }) {
               <PuffLoader size={100} color="blue" />
             ) : (
               categoriesData.map((category, index) => (
-                <Checkbox key={index} value={category.id}>
+                <Checkbox key={index} value={category.id} className="truncate" title={category.name}>
                   {category.name}
                 </Checkbox>
               ))
@@ -68,7 +68,7 @@ export default function FilterPanel({ onFilterChange, filterData }) {
               <PuffLoader size={100} color="blue" />
             ) : (
               authorsData.map((author, index) => (
-                <Checkbox key={index} value={author.id}>
+                <Checkbox key={index} className="truncate" title={author.name} value={author.id}>
                   {author.name}
                 </Checkbox>
               ))

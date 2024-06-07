@@ -166,7 +166,7 @@ export default function ViewBook({ book }) {
                   <td className="border px-4 py-2">{book.title}</td>
                 </tr>
                 <tr>
-                  <td className="border px-4 py-2 font-semibold">Description</td>
+                  <td className="border px-4 py-2 font-semibold">Summary</td>
                   <td className="border px-4 py-2">{book.summary}</td>
                 </tr>
                 <tr>

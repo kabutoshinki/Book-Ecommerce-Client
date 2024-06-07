@@ -100,7 +100,7 @@ export default function List({ filterData }) {
       {!isLoading ? (
         <Content className="p-4">
           {data ? <p>Showing {data?.meta?.totalItems} books</p> : null}
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {data
               ? data?.items?.map(({ id, title, price, discount, average_rate, categories, image }, index) => {
                   const discountedPrice = discount ? (price * (1 - discount.amount / 100)).toFixed(2) : null;

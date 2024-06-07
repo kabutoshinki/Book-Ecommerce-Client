@@ -17,7 +17,7 @@ const CartView = ({ item }) => {
         <img
           src={item?.book?.image}
           alt={item?.book?.title}
-          className="h-full object-center object-cover md:block hidden rounded-md  hover:scale-110 transition-transform duration-300 "
+          className="h-full w-full object-center object-cover md:block hidden rounded-md  hover:scale-110 transition-transform duration-300 "
         />
         <img
           src={item?.book?.image}

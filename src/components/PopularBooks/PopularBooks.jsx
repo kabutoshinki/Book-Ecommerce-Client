@@ -127,7 +127,9 @@ export default function PopularBooks() {
                     </div>
 
                     <div className="popularbook-info">
-                      <h4>{title}</h4>
+                      <h4 className="line-clamp-1" title={title}>
+                        {title}
+                      </h4>
                       <Rating
                         start={0}
                         stop={5}
