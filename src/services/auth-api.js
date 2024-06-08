@@ -9,6 +9,14 @@ export const authApi = {
         throw error;
       });
   },
+  googleLogin: (token) => {
+    return axiosClient
+      .post(`/auth/google`, { token })
+      .then((response) => response.data)
+      .catch((error) => {
+        throw error;
+      });
+  },
   register: (firstName, lastName, username, email, password) => {
     return axiosClient
       .post(`/auth/signup`, { firstName, lastName, username, email, password })

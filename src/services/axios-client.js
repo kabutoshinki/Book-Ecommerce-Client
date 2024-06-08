@@ -5,7 +5,48 @@ const axiosClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
+axiosClient.interceptors.request.use(
+  async function (config) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    // Fetch the CSRF token if it is not already set
+    if (!document.cookie.includes("XSRF-TOKEN")) {
+      const csrfResponse = await axios.get("http://localhost:8080/token", { withCredentials: true });
+      const csrfToken = csrfResponse.data.token;
+      document.cookie = `XSRF-TOKEN=${csrfToken}`;
+    }
+
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
+// axiosClient.interceptors.request.use(
+//   async function (config) {
+//     const token = localStorage.getItem("accessToken");
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+
+//     // Fetch the CSRF token
+//     const csrfResponse = await axios.get("http://localhost:8080/token");
+//     console.log(csrfResponse?.data.token);
+//     const csrfToken = csrfResponse.data.token;
+//     // config.headers["XSRF-Token"] = csrfToken;
+//     document.cookie = `XSRF-TOKEN=${csrfToken}`;
+//     return config;
+//   },
+//   function (error) {
+//     return Promise.reject(error);
+//   }
+// );
+
 axiosClient.interceptors.request.use(
   function (config) {
     const token = localStorage.getItem("accessToken");

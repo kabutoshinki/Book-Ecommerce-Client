@@ -5,10 +5,14 @@ import { authApi } from "../../services/auth-api";
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { generateDeviceId } from "../../utils/generateDeviceId";
+import { auth, googleAuthProvider } from "../../../config/firebase"; // Import Firebase config
+import { signInWithPopup } from "firebase/auth";
+
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const guest_cart = generateDeviceId();
+
   const onFinish = async (values) => {
     setLoading(true);
     try {
@@ -25,6 +29,33 @@ export default function Login() {
       navigate("/"); // Redirect to home page or another page
     } catch (error) {
       message.error("Login failed. Please check your email and password.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleAuthProvider);
+      const tokenId = await result.user.getIdToken();
+      setLoading(true);
+
+      const { accessToken, refreshToken } = await authApi.googleLogin(tokenId);
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+
+      // Decode accessToken to get user information if needed
+      const decodedAccessToken = jwtDecode(accessToken);
+      console.log("User info:", decodedAccessToken);
+      localStorage.setItem("userInfo", JSON.stringify(decodedAccessToken));
+      message.success("Google login successful!");
+      navigate("/"); // Redirect to home page or another page
+    } catch (error) {
+      if (error.code === "auth/popup-closed-by-user") {
+        message.info("Google login canceled by user.");
+      } else {
+        message.error("Google login failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -75,6 +106,16 @@ export default function Login() {
             </Link>
           </div>
         </Form>
+
+        <div className="text-center mt-6">
+          <Button
+            type="primary"
+            onClick={handleGoogleLogin}
+            className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
+          >
+            Login with Google
+          </Button>
+        </div>
 
         <div className="border-t mt-6 pt-6 text-center">
           <span>Bạn chưa có tài khoản? </span>
