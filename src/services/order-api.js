@@ -22,4 +22,12 @@ export const orderApi = {
       .catch((error) => {
         throw error;
       }),
+  changeOrderStatus: (orderId, state) => {
+    return axiosClient
+      .patch(`/order-details/change-status-order/${orderId}`, { state })
+      .then((response) => response.data)
+      .catch((error) => {
+        throw error;
+      });
+  },
 };

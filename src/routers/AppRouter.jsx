@@ -13,6 +13,7 @@ import Profile from "../pages/Profile/Profile";
 import Success from "../pages/Status/Success";
 import Failed from "../pages/Status/Failed";
 import OrderHistory from "../pages/Order/OrderHistory";
+import RedirectPage from "../pages/Status/Loading";
 // Import your login component
 
 function AppRouter() {
@@ -32,6 +33,7 @@ function AppRouter() {
         <Route path="/book/:id" element={<Book />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/order_history" element={<OrderHistory />} />
+        <Route path="/loading" element={<RedirectPage />} />
         <Route path="/success" element={<Success />} />
         <Route path="/failed" element={<Failed />} />
         <Route path="/login" element={<Login />} />

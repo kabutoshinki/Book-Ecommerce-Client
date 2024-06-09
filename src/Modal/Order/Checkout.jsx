@@ -15,32 +15,38 @@ const CheckoutModal = ({ isVisible, onCancel, totalCost, cartItems, userInfo, ch
   const queryClient = useQueryClient();
   const handlePayment = async () => {
     if (isAddressEmpty) {
-      // Handle case where user has no addresses
       toast.warning("Please add an address so we can deliver to you.");
       return;
     }
-    if (selectedPaymentMethod === "Default") {
-      try {
-        const createOrderDetailDto = {
-          totalAmount: totalCost,
-          orderItems: cartItems.map((item) => ({
-            bookId: item.bookId,
-            quantity: item.quantity,
-          })),
-          checkout_method: checkout,
-        };
-        await orderApi.createOrder(userInfo.sub, createOrderDetailDto);
-        toast.success("Order Success");
 
+    const createOrderDetailDto = {
+      totalAmount: totalCost,
+      orderItems: cartItems.map((item) => ({
+        bookId: item.bookId,
+        quantity: item.quantity,
+      })),
+      checkout_method: checkout,
+      type_method: selectedPaymentMethod,
+    };
+
+    try {
+      const response = await orderApi.createOrder(userInfo.sub, createOrderDetailDto);
+      toast.success("Order Success");
+
+      if (selectedPaymentMethod !== "Default") {
+        if (response?.paymentUrl) {
+          const { payUrl } = response.paymentUrl;
+
+          window.location.href = payUrl;
+        }
+      } else {
         navigate("/success");
         queryClient.invalidateQueries({ queryKey: ["cartQuantity"] });
-      } catch (error) {
-        toast.error("Order Failed");
-        navigate("/failed");
-        console.log(error);
       }
-    } else if (selectedPaymentMethod === "MOMO" || selectedPaymentMethod === "NCB") {
-      toast.warning("This feature still in progress please use payment traditional");
+    } catch (error) {
+      toast.error("Order Failed");
+      navigate("/failed");
+      console.log(error);
     }
   };
   return (
