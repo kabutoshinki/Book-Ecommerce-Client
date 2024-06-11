@@ -77,7 +77,7 @@ axiosClient.interceptors.response.use(
           const newRefreshToken = response.data.refreshToken;
           localStorage.setItem("accessToken", newAccessToken);
           localStorage.setItem("refreshToken", newRefreshToken);
-          localStorage.setItem("userInfo", jwtDecode(newAccessToken));
+          localStorage.setItem("userInfo", JSON.stringify(jwtDecode(newAccessToken)));
           // Retry the original request with the new access token
           error.config.headers.Authorization = `Bearer ${newAccessToken}`;
           console.log("refresh token success");
